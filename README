@@ -1,0 +1,14 @@
+This is the code for a Chrome extension that helps you preview
+how fonts from the Google Fonts API look on existing webpages.
+
+There is currently no API to query the fonts directory for metadata
+on the fonts, so this extension is manually updated based on the Google
+site every few weeks.
+
+The manual update process is:
+- Download CSS from http://code.google.com/webfonts
+- Replace '::Menu' in the CSS with ''
+- Copy JSON from http://code.google.com/webfonts/preview
+
+If you make improvements to this that other users may benefit from,
+please let me know.

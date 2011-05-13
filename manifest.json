@@ -1,0 +1,13 @@
+{
+  "name": "Google Font Previewer for Chrome",
+  "version": "1.65",
+  "description": "Lets you choose a font from the Google Font directory with a few text styling options, and preview them on the current tab.",
+  "permissions": [
+    "tabs", "http://*/*", "https://*/*"
+  ],
+  "browser_action": {
+      "default_title": "Changes the page font to desired Google Font API face.",
+      "default_icon": "font_api.gif",
+      "popup": "popup.html"
+  }
+}
