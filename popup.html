@@ -54,34 +54,48 @@ var fontOptionIds =
 
 function onLoad() {
   for (var fontName in fonts) {
-    addFont(fontName);
+    addFont(fontName, fonts[fontName]);
   }
 }
 
-function addFont(font) {
+function addFont(fontName, fontInfo) {
   var div = document.createElement('div');
+  div.className = 'fontrow ' + fontInfo.subset;
   var label = document.createElement('label');
   var input = document.createElement('input');
   input.type = 'radio';
   input.name = 'fontFamily';
-  input.value = font;
+  input.value = fontName;
   input.onchange = function () {
-    fontOptions['fontFamily'] = font;
+    fontOptions['fontFamily'] = fontName;
     changeFont();
   };
   label.appendChild(input);
-  label.style.fontFamily = font;
+  label.style.fontFamily = fontName;
   label.style.fontWeight = 'normal';
-  label.appendChild(document.createTextNode(font));
+  label.appendChild(document.createTextNode(fontName));
   div.appendChild(label);
   document.getElementById('fontfamily').appendChild(div);
 }
+
 
 function onOptionChange(elem) {
   var id = elem.id;
   var value = elem.value;
   fontOptions[id] = value;
   changeFont();
+}
+
+function onSubsetChange(elem) {
+  var value = elem.value;
+  var matches = document.querySelectorAll('div.fontrow');
+  for (var i = 0; i < matches.length; i++) {
+    if (matches[i].className.indexOf(value) > -1) {
+      matches[i].style.display = 'block';
+    } else {
+      matches[i].style.display = 'none';
+    }
+  }
 }
 
 function resetFont() {
@@ -187,7 +201,11 @@ function stringifyArgs() {
   <div style="clear:both">
    <form>
     <div id="fonts">
-     <label>Font family:</label>
+     <select id="fontSubset" onchange="onSubsetChange(this)">
+       <option value="latin" selected>Latin</option>
+       <option value="greek">Greek</option>
+       <option value="khmer">Khmer</option>
+     </select>
      <div id="fontfamily">
       <input type="radio" name="fontFamily" checked value="" style="display:none">
      </div>
