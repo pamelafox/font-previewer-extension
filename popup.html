@@ -1,9 +1,9 @@
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="fonts.css">
-<script src="fonts.js"></script>
-<style>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="fonts.css">
+  <script src="fonts.js"></script>
+  <style>
 body {
   background-color: #eee;
   width: 380px;
@@ -34,10 +34,19 @@ label {
   margin-top: 0px;
 }
 
-</style>
-<script>
+  </style>
+  <script>
 
+
+/**
+ * Hash to store the user's currently selected font options and values.
+ */
 var fontOptions = {};
+
+/**
+ * Hash that maps font option IDs to CSS equivalents.
+ * TODO: Remember why the mapping is necessary. (I forgot).
+ */
 var fontOptionIds =
 {'fontFamily': 'font-family',
  'fontSize': 'font-size',
@@ -52,12 +61,21 @@ var fontOptionIds =
 };
 
 
+/**
+ * Called on page load. Dynamically builds font list.
+ */
 function onLoad() {
   for (var fontName in fonts) {
     addFont(fontName, fonts[fontName]);
   }
+  onSubsetChange();
 }
 
+/**
+ * Adds specified font to font list.
+ * @param {String} fontName
+ * @param {Object} fontInfo
+ */
 function addFont(fontName, fontInfo) {
   var div = document.createElement('div');
   div.className = 'fontrow ' + fontInfo.subset;
@@ -78,7 +96,10 @@ function addFont(fontName, fontInfo) {
   document.getElementById('fontfamily').appendChild(div);
 }
 
-
+/**
+ * Called when the user changes any of the font styling options.
+ * @param {Element} elem
+ */
 function onOptionChange(elem) {
   var id = elem.id;
   var value = elem.value;
@@ -86,8 +107,12 @@ function onOptionChange(elem) {
   changeFont();
 }
 
-function onSubsetChange(elem) {
-  var value = elem.value;
+/**
+ * Called when the user changes the font subset dropdown.
+ * Also called on initial load.
+ */
+function onSubsetChange() {
+  var value = document.getElementById('fontSubset').value;
   var matches = document.querySelectorAll('div.fontrow');
   for (var i = 0; i < matches.length; i++) {
     if (matches[i].className.indexOf(value) > -1) {
@@ -98,16 +123,18 @@ function onSubsetChange(elem) {
   }
 }
 
-function resetFont() {
-  document.forms[0].reset();
 /**
-  var dropdowns = document.getElementsByTagName('select');
-  for (var i = 0; i < dropdowns.length; i++) {
-    dropdowns[i].selectedIndex = 0;
-  }
-  document.getElementById('fontSize').selectedIndex = 1;
-**/
+ * Resets the font on the target page by setting styles back
+ * to original styles (stored in data attributes).
+ */
+function resetFont() {
+  // Resets the form
+  document.forms[0].reset();
 
+  /**
+   * Resets the font and styles on target page to their original state, stored in data attributes.
+   * @param {Object} fontOptionIds
+   */
   function PREVIEWER_resetFont(fontOptionIds) {
 
     function resetElem(elem) {
@@ -127,14 +154,21 @@ function resetFont() {
       resetElem(elems[i]);
     }
   }
+
+  // Serializes the function and sends to target page. 
   var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
   chrome.tabs.executeScript(null, {code: code});
 }
 
+/**
+ * Called when the user selects a new font to preview.
+ */
 function changeFont() {
 
   var fontFamily = fontOptions['fontFamily'] || fonts[0];
   var fontUrl = fonts[fontFamily].url;
+
+  // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
   fontHtml += '<style>\nbody {\n font-family: \'' + fontFamily + '\', ' + fonts[fontFamily].alt + ';\n';
   for (var fontOptionId in fontOptionIds) {
@@ -147,9 +181,22 @@ function changeFont() {
   fontHtml += '}\n</style>';
   document.getElementById('fontHtml').innerHTML = fontHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  /**
+   * Changes the font and styles on the target page per user selected options.
+   * Sends all the globals from this page, since they are not available on the target page.
+   * @param {Object} fontOptionIds
+   * @param {Object} fontOptions
+   * @param {String} fontFamily
+   * @param {String} fontUrl
+   */
   function PREVIEWER_changeFont(fontOptionIds, fontOptions, fontFamily, fontUrl) {
-    document.body.innerHTML += '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">';
 
+    /**
+     * Processes given DOM element. For every styling option specified, it stores
+     * the old style as a data attribute and sets the new style.
+     * It also sets a classname on the element to indicate its been processed.
+     * @param {Element} elem
+     */
     function processElem(elem) {
       for (var fontOptionId in fontOptionIds) {
         if (fontOptions[fontOptionId]) {
@@ -164,6 +211,9 @@ function changeFont() {
       }
     }
 
+    // Adds the font stylesheet to the page.
+    document.body.innerHTML += '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">';
+    // Processes BODY tag and all children.
     processElem(document.body);
     var elems = document.body.getElementsByTagName('*');
     for (var i = 0; i < elems.length; i++) {
@@ -171,11 +221,17 @@ function changeFont() {
     }
   }
 
+  // Serializes function and sends to target page.
   var code = PREVIEWER_changeFont.toString() +
     ' PREVIEWER_changeFont(' + stringifyArgs(fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
   chrome.tabs.executeScript(null, {code: code});
 }
 
+/**
+ * Converts all passed arguments to a string.
+ * Makes it easier to send function call to executeScript()
+ * return {String}
+ */
 function stringifyArgs() {
   var stringifiedArgs = [];
   for (var i = 0; i < arguments.length; i++) {
@@ -191,13 +247,9 @@ function stringifyArgs() {
   return stringifiedArgs.join(',');
 }
 
-</script>
-</head>
+  </script>
+ </head>
  <body onload="onLoad()">
-  <!--
-  <p>Select font family and options below to preview them on the current tab.</p>
-  -->
-
   <div style="clear:both">
    <form>
     <div id="fonts">

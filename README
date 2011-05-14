@@ -6,9 +6,16 @@ on the fonts, so this extension is manually updated based on the Google
 site every few weeks.
 
 The manual update process is:
-- Download CSS from http://code.google.com/webfonts
-- Replace '::Menu' in the CSS with ''
-- Copy JSON from http://code.google.com/webfonts/preview
+- Download CSS files from http://code.google.com/webfonts, save to fonts.css
+- Replace '::Menu' in fonts.css with ''
+- Copy JSON from http://code.google.com/webfonts/preview, save to fonts.js
 
-If you make improvements to this that other users may benefit from,
+Here are some features that I would like to add in the future:
+- Automate the update process somehow
+- Filter font list by serif/sans serif/etc, like on Web Fonts directory
+- Sort font list (like on Web Fonts directory)
+- Ability to star favorite fonts, list at top (using localStorage)
+- Ability to specify a CSS selector to apply font changes to (using querySelectorAll)
+
+If you make improvements to this (like the suggestions above),
 please let me know.
