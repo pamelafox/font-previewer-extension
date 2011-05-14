@@ -95,62 +95,87 @@ function resetFont() {
   document.getElementById('fontSize').selectedIndex = 1;
 **/
 
-  var fontCode = '';
-  fontCode +=
-  'var items = document.getElementsByClassName("fontchangermodified");' +
-  'for (var i = 0, len=items.length; i < len; i++) {' +
-    'var item = items[i];';
-  for (var fontOptionId in fontOptionIds) {
-    fontCode +=
-      'if (item.hasAttribute("data-' + fontOptionId + '")) {' +
-        'if (item.getAttribute("data-' + fontOptionId + '") != "undefined") {' +
-          'item.style.' + fontOptionId + ' = item.getAttribute("data-' + fontOptionId + '");' +
-        '} else {' +
-          'item.style.' + fontOptionId + ' = null;' +
-        '}' +
-      '}';
-  }
-  fontCode += '}';
+  function PREVIEWER_resetFont(fontOptionIds) {
 
-  chrome.tabs.executeScript(null, {code: fontCode});
+    function resetElem(elem) {
+      for (var fontOptionId in fontOptionIds) {
+        if (elem.hasAttribute('data-' + fontOptionId)) {
+          if (elem.getAttribute('data-' + fontOptionId) != 'undefined') {
+            elem.style[fontOptionId] = elem.getAttribute('data-' + fontOptionId);
+          } else {
+            elem.style[fontOptionId] = null;
+          }
+        }
+      }
+    }
+    resetElem(document.body);
+    var elems = document.getElementsByClassName('fontchangermodified');
+    for (var i = 0; i < elems.length; i++) {
+      resetElem(elems[i]);
+    }
+  }
+  var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
+  chrome.tabs.executeScript(null, {code: code});
 }
 
-// Horrible
-// Replace with function.toString. Credit to @rioter.
 function changeFont() {
 
   var fontFamily = fontOptions['fontFamily'] || fonts[0];
-  var fontName = fontFamily.replace(' ', '+');
-  var fontCode = 'document.body.innerHTML += \'<link href="' + fonts[fontFamily].url + '" rel="stylesheet" type="text/css">\';';
-  var fontHtml = '&lt;link href="' + fonts[fontFamily].url + '" rel="stylesheet" type="text/css" &gt;\n';
-  fontHtml += '&lt;style&gt;\nbody {\n';
-  fontHtml += '  font-family: \'' + fontFamily + '\', ' + fonts[fontFamily].alt + ';\n';
+  var fontUrl = fonts[fontFamily].url;
+  var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">';
+  fontHtml += '<style> body { font-family: \'' + fontFamily + '\', ' + fonts[fontFamily].alt;
   for (var fontOptionId in fontOptionIds) {
     if (fontOptions[fontOptionId]) {
-     if (fontOptionId != 'fontFamily') {
-      fontHtml += '  ' + fontOptionIds[fontOptionId] + ': ' + fontOptions[fontOptionId] + ';\n';
-     }
+      if (fontOptionId != 'fontFamily') {
+        fontHtml += '  ' + fontOptionIds[fontOptionId] + ': ' + fontOptions[fontOptionId] + ';\n';
+      }
     }
   }
-  fontHtml += '}\n&lt;/style&gt;';
-  document.getElementById('fontHtml').innerHTML = fontHtml;
+  fontHtml += '}</style>';
+  document.getElementById('fontHtml').innerHTML = fontHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-  fontCode += 'var items = document.getElementsByTagName("*"); for (var i=0, len=items.length; i < len; i++) { var item = items[i];';
-  for (var fontOptionId in fontOptionIds) {
-    if (fontOptions[fontOptionId]) {
-     fontCode += 'if (item.tagName != "BODY" && item.tagName != "HEAD" && item.tagName != "LINK" && item.tagName != "HTML") {';
-     fontCode += 'if (item.className.indexOf("fontchangermodified") == -1) {' +                        'item.className += " fontchangermodified";' +
-                  '}';
-     fontCode += 'if (item.getAttribute("data-' + fontOptionId + '") == undefined) {' +
-                    'item.setAttribute("data-' + fontOptionId + '", item.style.fontOptionId);' +
-                  '}';
-     fontCode += 'item.style.' + fontOptionId + ' = \'' + fontOptions[fontOptionId] + '\';';
-     fontCode += '}';
+  function PREVIEWER_changeFont(fontOptionIds, fontOptions, fontFamily, fontUrl) {
+    document.body.innerHTML += '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">';
+
+    function processElem(elem) {
+      for (var fontOptionId in fontOptionIds) {
+        if (fontOptions[fontOptionId]) {
+          if (elem.className.indexOf('fontchangermodified') == -1) {
+            elem.className += ' fontchangermodified';
+          }
+          if (elem.getAttribute('data-' + fontOptionId) == undefined) {
+            elem.setAttribute('data-' + fontOptionId, elem.style[fontOptionId]);
+          }
+          elem.style[fontOptionId] = fontOptions[fontOptionId];
+        }
+      }
+    }
+
+    processElem(document.body);
+    var elems = document.body.getElementsByTagName('*');
+    for (var i = 0; i < elems.length; i++) {
+      processElem(elems[i]);
     }
   }
-  fontCode += '}';
 
-  chrome.tabs.executeScript(null, {code: fontCode});
+  var code = PREVIEWER_changeFont.toString() +
+    ' PREVIEWER_changeFont(' + stringifyArgs(fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
+  chrome.tabs.executeScript(null, {code: code});
+}
+
+function stringifyArgs() {
+  var stringifiedArgs = [];
+  for (var i = 0; i < arguments.length; i++) {
+    var argument = arguments[i];
+    if (typeof argument == 'string') {
+      stringifiedArgs.push('\'' + argument + '\'');
+    } else if (typeof argument == 'number' || typeof argument == 'boolean') {
+      stringifiedArgs.push(argument);
+    } else if (typeof argument == 'object') {
+      stringifiedArgs.push(JSON.stringify(argument));
+    }
+  }
+  return stringifiedArgs.join(',');
 }
 
 </script>
