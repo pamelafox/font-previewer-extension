@@ -1,4 +1,10 @@
 @font-face {
+  font-family: 'Aclonica';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Aclonica'), local('Aclonica-Regular'), url('http://themes.googleusercontent.com/font?kit=WdinNJjpXVLsM4XvNS7XeXYhjbSpvc47ee6xR_80Hnw') format('woff');
+}
+@font-face {
   font-family: 'Allan';
   font-style: normal;
   font-weight: bold;
@@ -83,6 +89,12 @@
   src: local('Bevan'), url('http://themes.googleusercontent.com/font?kit=SDIhK-Jde1h5_oLv9m_T5KCWcynf_cDxXwCLxiixG1c') format('woff');
 }
 @font-face {
+  font-family: 'Bigshot One';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Bigshot One'), local('BigshotOne'), url('http://themes.googleusercontent.com/font?kit=bWykSiy19zUrP0LR0jRzqpXfdieUyyORoM9wGrfggHw') format('woff');
+}
+@font-face {
   font-family: 'Buda';
   font-style: normal;
   font-weight: 300;
@@ -123,6 +135,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Cardo'), url('http://themes.googleusercontent.com/font?kit=x62x5VPx5p80nzQwbMP19qCWcynf_cDxXwCLxiixG1c') format('woff');
+}
+@font-face {
+  font-family: 'Carter One';
+  font-style: normal;
+  font-weight: normal;
+  src: local('CarterOne'), url('http://themes.googleusercontent.com/font?kit=JVmz2IJx4pokjeiHbgrKP73hpw3pgy2gAi-Ip7WPMi0') format('woff');
 }
 @font-face {
   font-family: 'Cherry Cream Soda';
@@ -197,16 +215,28 @@
   src: local('Cuprum'), url('http://themes.googleusercontent.com/font?kit=CJlJu5oYQN7CbnLMYuWxuevvDin1pK8aKteLpeZ5c0A') format('woff');
 }
 @font-face {
+  font-family: 'Damion';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Damion'), url('http://themes.googleusercontent.com/font?kit=PwEZyG1ofnGVfGyo3jLZSevvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
   font-family: 'Dancing Script';
   font-style: normal;
   font-weight: normal;
-  src: local('Dancing Script'), local('DancingScript'), url('http://themes.googleusercontent.com/font?kit=DK0eTGXiZjN6yA8zAEyM2T3YhDbrqBPJmia6ohwevn0') format('woff');
+  src: local('Dancing Script'), local('DancingScript'), url('http://themes.googleusercontent.com/static/fonts/dancingscript/v0/DK0eTGXiZjN6yA8zAEyM2T3YhDbrqBPJmia6ohwevn0.woff') format('woff');
 }
 @font-face {
   font-family: 'Dawning of a New Day';
   font-style: normal;
   font-weight: normal;
   src: local('Dawning of a New Day'), local('DawningofaNewDay'), url('http://themes.googleusercontent.com/font?kit=JiDsRhiKZt8uz3NJ5xA06nQDhz64YJWIGxdZhK8XRUv3rGVtsTkPsbDajuO5ueQw') format('woff');
+}
+@font-face {
+  font-family: 'Didact Gothic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Didact Gothic'), local('DidactGothic'), url('http://themes.googleusercontent.com/font?kit=v8_72sD3DYMKyM0dn3LtWvL_zqruQFRWlsldxQjvwTY') format('woff');
 }
 @font-face {
   font-family: 'Droid Sans';
@@ -245,6 +275,12 @@
   src: local('Fontdiner Swanky'), local('FontdinerSwanky'), url('http://themes.googleusercontent.com/font?kit=8_GxIO5ixMtn5P6COsF3Tr0yRi-aAQ4wa0-6Pchbgps') format('woff');
 }
 @font-face {
+  font-family: 'Francois One';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Francois One'), local('FrancoisOne'), url('http://themes.googleusercontent.com/font?kit=bYbkq2nU2TSx4SwFbz5sCLyZXjRt7DtCfnhPeGk_nvY') format('woff');
+}
+@font-face {
   font-family: 'Geo';
   font-style: normal;
   font-weight: normal;
@@ -261,6 +297,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Gruppo'), url('http://themes.googleusercontent.com/font?kit=BnVUiWijPmik1BhxojQU-uvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'Holtwood One SC';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Holtwood One SC'), local('HoltwoodOneSC'), url('http://themes.googleusercontent.com/font?kit=sToOq3cIxbfnhbEkgYNuBQSNLspZCfEiFU-KdkeJJJc') format('woff');
 }
 @font-face {
   font-family: 'Homemade Apple';
@@ -284,7 +326,7 @@
   font-family: 'Indie Flower';
   font-style: normal;
   font-weight: normal;
-  src: local('Indie Flower'), local('IndieFlower'), url('http://themes.googleusercontent.com/font?kit=10JVD_humAd5zP2yrFqw6ryZXjRt7DtCfnhPeGk_nvY') format('woff');
+  src: local('Indie Flower'), local('IndieFlower'), url('http://themes.googleusercontent.com/static/fonts/indieflower/v0/10JVD_humAd5zP2yrFqw6ryZXjRt7DtCfnhPeGk_nvY.woff') format('woff');
 }
 @font-face {
   font-family: 'Irish Grover';
@@ -303,6 +345,12 @@
   font-style: normal;
   font-weight: 400;
   src: local('Josefin Slab'), local('JosefinSlab'), url('http://themes.googleusercontent.com/font?kit=46aYWdgz-1oFX11flmyEfbyZXjRt7DtCfnhPeGk_nvY') format('woff');
+}
+@font-face {
+  font-family: 'Judson';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Judson Regular'), local('Judson-Regular'), url('http://themes.googleusercontent.com/font?kit=DhzivixfllHcseu5NdB7-uvvDin1pK8aKteLpeZ5c0A') format('woff');
 }
 @font-face {
   font-family: 'Just Another Hand';
@@ -377,6 +425,12 @@
   src: local('Maiden Orange'), local('MaidenOrange-Regular'), url('http://themes.googleusercontent.com/font?kit=ZhKIA2SPisEwdhW7g0RUWsfG1V76d0nCGWWT2gcvXUQ') format('woff');
 }
 @font-face {
+  font-family: 'Mako';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Mako'), url('http://themes.googleusercontent.com/font?kit=aNZpg4yzYtQozgKvtOT80vesZW2xOQ-xsNqO47m55DA') format('woff');
+}
+@font-face {
   font-family: 'Meddon';
   font-style: normal;
   font-weight: normal;
@@ -389,10 +443,22 @@
   src: local('MedievalSharp'), url('http://themes.googleusercontent.com/font?kit=85X_PjV6tftJ0-rX7KYQkHE7AAnxwUGbaupXvIIAefA') format('woff');
 }
 @font-face {
+  font-family: 'Megrim';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Megrim'), url('http://themes.googleusercontent.com/font?kit=pZrI7jSuFI1p1otmQX_Ph-vvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
   font-family: 'Merriweather';
   font-style: normal;
   font-weight: normal;
   src: local('Merriweather'), url('http://themes.googleusercontent.com/font?kit=RFda8w1V0eDZheqfcyQ4ELyZXjRt7DtCfnhPeGk_nvY') format('woff');
+}
+@font-face {
+  font-family: 'Metrophobic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Metrophobic'), url('http://themes.googleusercontent.com/font?kit=0IZPA9DbzKXnGZABsAivT5XfdieUyyORoM9wGrfggHw') format('woff');
 }
 @font-face {
   font-family: 'Michroma';
@@ -413,6 +479,12 @@
   src: local('Molengo'), url('http://themes.googleusercontent.com/font?kit=iaICcut5UzQxVASWf-9maALUuEpTyoUstqEm5AMlJo4') format('woff');
 }
 @font-face {
+  font-family: 'Monofett';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Monofett'), url('http://themes.googleusercontent.com/font?kit=Aoe-FOL_lo1_IXZRy5nUeXYhjbSpvc47ee6xR_80Hnw') format('woff');
+}
+@font-face {
   font-family: 'Mountains of Christmas';
   font-style: normal;
   font-weight: normal;
@@ -429,6 +501,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Neuton Regular'), local('Neuton'), url('http://themes.googleusercontent.com/font?kit=NQhkkJtiYzQntqr2q7qApuvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'News Cycle';
+  font-style: normal;
+  font-weight: normal;
+  src: local('News Cycle'), local('NewsCycle'), url('http://themes.googleusercontent.com/font?kit=2tsOkVuw9tLSy8bn82LYyr3hpw3pgy2gAi-Ip7WPMi0') format('woff');
 }
 @font-face {
   font-family: 'Nobile';
@@ -455,6 +533,12 @@
   src: local('Old Standard TT Regular'), local('OldStandardTT-Regular'), url('http://themes.googleusercontent.com/font?kit=n6RTCDcIPWSE8UNBa4k-DGTQ_34JFL6GSObug6gFiQk') format('woff');
 }
 @font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('http://themes.googleusercontent.com/static/fonts/opensans/v1/rz_d-lYvynrnx9mBCNBwxbO3LdcAZYWl9Si6vvxL-qU.woff') format('woff');
+}
+@font-face {
   font-family: 'Orbitron';
   font-style: normal;
   font-weight: 400;
@@ -465,6 +549,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Oswald '), local('Oswald'), url('http://themes.googleusercontent.com/font?kit=Qsv-D59w7tTCsbuefgF49uvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'Over the Rainbow';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Over the Rainbow'), local('OvertheRainbow'), url('http://themes.googleusercontent.com/font?kit=6gp-gkpI2kie2dHQQLM2jWwCJkHGYLyS4YscW05NSjk') format('woff');
 }
 @font-face {
   font-family: 'PT Sans';
@@ -485,6 +575,12 @@
   src: local('Pacifico'), url('http://themes.googleusercontent.com/font?kit=vG-QeEuRuJRvN5n5IlfJDXYhjbSpvc47ee6xR_80Hnw') format('woff');
 }
 @font-face {
+  font-family: 'Paytone One';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Paytone One'), local('PaytoneOne'), url('http://themes.googleusercontent.com/font?kit=D_d4Nj6jwG2cmUCLYeqgKZXfdieUyyORoM9wGrfggHw') format('woff');
+}
+@font-face {
   font-family: 'Permanent Marker';
   font-style: normal;
   font-weight: normal;
@@ -497,6 +593,12 @@
   src: local('Philosopher'), url('http://themes.googleusercontent.com/font?kit=OttjxgcoEsufOGSINYBGLZXfdieUyyORoM9wGrfggHw') format('woff');
 }
 @font-face {
+  font-family: 'Play';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Play'), url('http://themes.googleusercontent.com/font?kit=O42nOVBbQePwEq3_DiTzmfesZW2xOQ-xsNqO47m55DA') format('woff');
+}
+@font-face {
   font-family: 'Puritan';
   font-style: normal;
   font-weight: normal;
@@ -507,6 +609,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Quattrocento Roman Regular'), local('QuattrocentoRoman'), url('http://themes.googleusercontent.com/font?kit=WZDISdyil4HsmirlOdBRFLyZXjRt7DtCfnhPeGk_nvY') format('woff');
+}
+@font-face {
+  font-family: 'Quattrocento Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Quattrocento Sans'), local('QuattrocentoSans'), url('http://themes.googleusercontent.com/font?kit=efd6FGWWGX5Z3ztwLBrG9fFMMnpDWy2PkGS0SRJSyIs') format('woff');
 }
 @font-face {
   font-family: 'Radley';
@@ -533,10 +641,28 @@
   src: local('Rock Salt'), local('RockSalt'), url('http://themes.googleusercontent.com/font?kit=TeUmwM6w8tNiSIQ2En_qULO3LdcAZYWl9Si6vvxL-qU') format('woff');
 }
 @font-face {
+  font-family: 'Rokkitt';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Rokkitt'), url('http://themes.googleusercontent.com/font?kit=j7yPV9pquEdcelvB1Nl2EgLUuEpTyoUstqEm5AMlJo4') format('woff');
+}
+@font-face {
   font-family: 'Schoolbell';
   font-style: normal;
   font-weight: normal;
   src: local('Schoolbell'), url('http://themes.googleusercontent.com/font?kit=g-t5IiQJyfkOFjTMuyK0p73hpw3pgy2gAi-Ip7WPMi0') format('woff');
+}
+@font-face {
+  font-family: 'Shanti';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Shanti'), url('http://themes.googleusercontent.com/font?kit=Ef5aFwc1COd4K5ZlwKCVR-vvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'Sigmar One';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Sigmar One'), local('SigmarOne'), url('http://themes.googleusercontent.com/font?kit=Wmjg6wZKC6ktxvvp678xRL3hpw3pgy2gAi-Ip7WPMi0') format('woff');
 }
 @font-face {
   font-family: 'Six Caps';
@@ -551,10 +677,22 @@
   src: local('Slackey'), url('http://themes.googleusercontent.com/font?kit=B3_viNXFZH3RRznZxWyiyALUuEpTyoUstqEm5AMlJo4') format('woff');
 }
 @font-face {
+  font-family: 'Smythe';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Smythe'), url('http://themes.googleusercontent.com/font?kit=ojxx913-aHFMjawQB3DOn-vvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
   font-family: 'Sniglet';
   font-style: normal;
   font-weight: 800;
   src: local('Sniglet'), url('http://themes.googleusercontent.com/font?kit=jFSXjDTbyikKfr47vK6GtL3hpw3pgy2gAi-Ip7WPMi0') format('woff');
+}
+@font-face {
+  font-family: 'Special Elite';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Special Elite'), local('SpecialElite-Regular'), url('http://themes.googleusercontent.com/font?kit=9-wW4zu3WNoD5Fjka35Jm8fG1V76d0nCGWWT2gcvXUQ') format('woff');
 }
 @font-face {
   font-family: 'Sue Ellen Francisco';
@@ -567,6 +705,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Sunshiney'), url('http://themes.googleusercontent.com/font?kit=JSNEuLgcvN1Ago3wd78MWrO3LdcAZYWl9Si6vvxL-qU') format('woff');
+}
+@font-face {
+  font-family: 'Swanky and Moo Moo';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Swanky and Moo Moo'), local('SwankyandMooMoo'), url('http://themes.googleusercontent.com/font?kit=orVNZ9kDeE3lWp3U3YELu0zA9DEhJiqjue6V_L9abVA') format('woff');
 }
 @font-face {
   font-family: 'Syncopate';
@@ -587,6 +731,12 @@
   src: local('Terminal Dosis Light'), local('TerminalDosis-Light'), url('http://themes.googleusercontent.com/font?kit=UyNOlq8pwXsdXFw6uDx3EsXbY0iXaoMp6EGhlHctYiP3rGVtsTkPsbDajuO5ueQw') format('woff');
 }
 @font-face {
+  font-family: 'The Girl Next Door';
+  font-style: normal;
+  font-weight: normal;
+  src: local('The Girl Next Door'), local('TheGirlNextDoor'), url('http://themes.googleusercontent.com/font?kit=cWRA4JVGeEcHGcPl5hmX7nl6u9ydkyoaA6nXT1W8o4Q') format('woff');
+}
+@font-face {
   font-family: 'Tinos';
   font-style: normal;
   font-weight: normal;
@@ -597,6 +747,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Ubuntu'), url('http://themes.googleusercontent.com/font?kit=tcKMcGiTiP6oQJ3OO9TdcuvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'Ultra';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Ultra'), url('http://themes.googleusercontent.com/font?kit=N37YjEVftlzgIT2wpUpP-aCWcynf_cDxXwCLxiixG1c') format('woff');
 }
 @font-face {
   font-family: 'UnifrakturCook';
@@ -639,6 +795,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Waiting for the Sunrise'), local('WaitingfortheSunrise'), url('http://themes.googleusercontent.com/font?kit=eNfH7kLpF1PZWpsetF-hayVgNOVxIbaSxCZW-Bk8TwAC1LhKU8qFLLahJuQDJSaO') format('woff');
+}
+@font-face {
+  font-family: 'Wallpoet';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Wallpoet'), url('http://themes.googleusercontent.com/font?kit=dLhgEgeJPRhLD96tFAR5Q3YhjbSpvc47ee6xR_80Hnw') format('woff');
 }
 @font-face {
   font-family: 'Walter Turncoat';
