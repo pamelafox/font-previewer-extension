@@ -1,6 +1,6 @@
 {
   "name": "Google Font Previewer for Chrome",
-  "version": "1.77",
+  "version": "1.81",
   "description": "Lets you choose a font from the Google Font directory with a few text styling options, and preview them on the current tab.",
   "permissions": [
     "tabs", "http://*/*", "https://*/*"
