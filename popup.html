@@ -85,7 +85,7 @@ function addFont(fontName, fontInfo) {
   input.name = 'fontFamily';
   input.value = fontName;
   input.onchange = function () {
-    fontOptions['fontFamily'] = fontName;
+    fontOptions.fontFamily = fontName;
     changeFont();
   };
   label.appendChild(input);
@@ -165,7 +165,7 @@ function resetFont() {
  */
 function changeFont() {
 
-  var fontFamily = fontOptions['fontFamily'] || fonts[0];
+  var fontFamily = fontOptions.fontFamily || fonts[0];
   var fontUrl = fonts[fontFamily].url;
 
   // Constructs the HTML that the user can copy/paste into their site.
@@ -203,7 +203,7 @@ function changeFont() {
           if (elem.className.indexOf('fontchangermodified') == -1) {
             elem.className += ' fontchangermodified';
           }
-          if (elem.getAttribute('data-' + fontOptionId) == undefined) {
+          if (elem.getAttribute('data-' + fontOptionId) === undefined) {
             elem.setAttribute('data-' + fontOptionId, elem.style[fontOptionId]);
           }
           elem.style[fontOptionId] = fontOptions[fontOptionId];
