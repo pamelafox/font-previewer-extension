@@ -19,10 +19,14 @@ label {
   font-weight: bold;
 }
 
+.fonts-header {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
 #fonts {
   float: left;
   text-align: left;
-  font-size: 14px;
   margin-top: 1px;
   margin-right: 10px;
   height: 100%;
@@ -34,9 +38,115 @@ label {
   margin-top: 0px;
 }
 
+.localstarage {
+  cursor: pointer;
+  color: #DDD;
+  padding-right: 5px;
+}
+
+.localstarage:hover {
+  color: #FFE47A;
+}
+
+.localstarage.starred:hover {
+  color: #FFCC00;
+}
+
+.localstarage.starred {
+  color: #FFCC00;
+  -webkit-text-stroke-color: #666;
+  -webkit-text-stroke-width: 1px;
+}
   </style>
   <script>
 
+var localStarage = function() {
+  var LSPREFIX = 'localstarage-';
+  var STARCLASS = 'localstarage';
+  var STARREDCLASS = 'starred';
+  var CLONESUFFIX = '-clone';
+  var EMPTYHTML = '(None yet)';
+
+  var supportsStorage = function () {
+    try {
+      return !!localStorage.getItem;
+    } catch (e) {
+      return false;
+    }
+  }();
+
+  var addClone = function(item, starredList, onClone) {
+    if (starredList.innerHTML == EMPTYHTML) {
+      starredList.innerHTML = '';
+    }
+    var starredNode = item.cloneNode(true);
+    starredNode.id += CLONESUFFIX;
+    starredList.appendChild(starredNode);
+    // Events don't copy :(
+    starredNode.querySelectorAll('.' + STARCLASS)[0].onclick = item.querySelectorAll('.' + STARCLASS)[0].onclick;
+    onClone.call(null, starredNode);
+  }
+
+  var removeClone = function(item) {
+    var starredNode = document.getElementById(item.id + CLONESUFFIX);
+    starredNode.parentNode.removeChild(starredNode);
+  }
+
+  var checkEmpty = function(starredList) {
+    if (starredList.querySelectorAll('.' + STARREDCLASS).length == 0) {
+      console.log('setting inner html');
+      starredList.innerHTML = EMPTYHTML;
+    }
+  }
+
+  var addStar = function(item, options) {
+    var lsKey = LSPREFIX + item.id;
+    var star = document.createElement('span');
+    star.className = STARCLASS;
+    star.innerHTML = '★';
+    star.onclick = function(event) {
+      event.preventDefault();
+      if (star.className.indexOf(STARREDCLASS) == -1) {
+        star.className += ' ' + STARREDCLASS;
+        localStorage.setItem(lsKey, 'starred');
+        if (options.starredList) {
+          addClone(item, options.starredList, options.onClone);
+        }
+      } else {
+        star.className = STARCLASS;
+        localStorage.removeItem(lsKey);
+        if (options.starredList) {
+          removeClone(item);
+          checkEmpty(options.starredList);
+        }
+      }
+    };
+    item.insertBefore(star, item.firstChild);
+
+    if (localStorage.getItem(lsKey)) {
+      star.className += ' ' + STARREDCLASS;
+      if (options.starredList) {
+        addClone(item, options.starredList, options.onClone);
+      }
+    }
+  }
+
+  return {
+
+    init: function(list, options) {
+      if (!supportsStorage) return false;
+      var items = list.childNodes;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].nodeType == 1) {
+          addStar(items[i], options);
+        }
+      }
+      if (options.starredList) {
+        checkEmpty(options.starredList);
+      }
+    }
+  }
+}();
 
 /**
  * Hash to store the user's currently selected font options and values.
@@ -65,10 +175,15 @@ var fontOptionIds =
  * Called on page load. Dynamically builds font list.
  */
 function onLoad() {
+  var fontsList = document.getElementById('fonts-all');
   for (var fontName in fonts) {
-    addFont(fontName, fonts[fontName]);
+    fontsList.appendChild(makeFontRow(fontName, fonts[fontName]));
   }
   onSubsetChange();
+  localStarage.init(fontsList, {
+     starredList: document.getElementById('fonts-starred'),
+     onClone: addRowBehavior
+  });
 }
 
 /**
@@ -76,24 +191,31 @@ function onLoad() {
  * @param {String} fontName
  * @param {Object} fontInfo
  */
-function addFont(fontName, fontInfo) {
+function makeFontRow(fontName, fontInfo) {
   var div = document.createElement('div');
+  div.id = fontName.replace(' ', '');
   div.className = 'fontrow ' + fontInfo.subset;
   var label = document.createElement('label');
   var input = document.createElement('input');
   input.type = 'radio';
   input.name = 'fontFamily';
   input.value = fontName;
-  input.onchange = function () {
-    fontOptions.fontFamily = fontName;
-    changeFont();
-  };
   label.appendChild(input);
   label.style.fontFamily = fontName;
   label.style.fontWeight = 'normal';
   label.appendChild(document.createTextNode(fontName));
   div.appendChild(label);
-  document.getElementById('fontfamily').appendChild(div);
+  addRowBehavior(div);
+  return div;
+}
+
+
+function addRowBehavior(div) {
+  var input = div.getElementsByTagName('input')[0];
+  input.onchange = function () {
+    fontOptions.fontFamily = input.value;
+    changeFont();
+  };
 }
 
 /**
@@ -112,7 +234,7 @@ function onOptionChange(elem) {
  * Also called on initial load.
  */
 function onSubsetChange() {
-  var value = document.getElementById('fontSubset').value;
+  var value = document.getElementById('fonts-subset').value;
   var matches = document.querySelectorAll('div.fontrow');
   for (var i = 0; i < matches.length; i++) {
     if (matches[i].className.indexOf(value) > -1) {
@@ -253,13 +375,19 @@ function stringifyArgs() {
   <div style="clear:both">
    <form>
     <div id="fonts">
-     <select id="fontSubset" onchange="onSubsetChange(this)">
+     <label>Filter:</label>
+     <select id="fonts-subset" onchange="onSubsetChange(this)">
        <option value="latin" selected>Latin</option>
        <option value="greek">Greek</option>
        <option value="khmer">Khmer</option>
      </select>
-     <div id="fontfamily">
-      <input type="radio" name="fontFamily" checked value="" style="display:none">
+     <div class="fonts-header">Your Favorites:</div>
+     <div id="fonts-starred"></div>
+     <div class="fonts-header">Browse All:</div>
+     <div id="fonts-all">
+      <div id="nofont" style="display: none;">
+        <input type="radio" name="fontFamily" checked value="" style="display:none">
+      </div>
      </div>
     </div>
 
