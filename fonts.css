@@ -338,7 +338,7 @@
   font-family: 'Indie Flower';
   font-style: normal;
   font-weight: normal;
-  src: local('Indie Flower'), local('IndieFlower'), url('http://themes.googleusercontent.com/static/fonts/indieflower/v0/10JVD_humAd5zP2yrFqw6ryZXjRt7DtCfnhPeGk_nvY.woff') format('woff');
+  src: local('Indie Flower'), local('IndieFlower'), url('http://themes.googleusercontent.com/static/fonts/indieflower/v1/10JVD_humAd5zP2yrFqw6ryZXjRt7DtCfnhPeGk_nvY.woff') format('woff');
 }
 @font-face {
   font-family: 'Irish Grover';
@@ -425,6 +425,12 @@
   src: local('Lekton'), local('Lekton-Regular'), url('http://themes.googleusercontent.com/font?kit=O5NsbS6Oz2cAWk_bmXwfHuvvDin1pK8aKteLpeZ5c0A') format('woff');
 }
 @font-face {
+  font-family: 'Limelight';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Limelight'), url('http://themes.googleusercontent.com/font?kit=W3wfI_qIkpPdKMedrmnRSLO3LdcAZYWl9Si6vvxL-qU') format('woff');
+}
+@font-face {
   font-family: 'Lobster';
   font-style: normal;
   font-weight: normal;
@@ -447,6 +453,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Mako'), url('http://themes.googleusercontent.com/font?kit=aNZpg4yzYtQozgKvtOT80vesZW2xOQ-xsNqO47m55DA') format('woff');
+}
+@font-face {
+  font-family: 'Maven Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Maven Pro Regular'), local('MavenProRegular'), url('http://themes.googleusercontent.com/font?kit=NmUmNE1MbykPPV8BbjuZFrO3LdcAZYWl9Si6vvxL-qU') format('woff');
 }
 @font-face {
   font-family: 'Meddon';
@@ -507,6 +519,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Mountains of Christmas'), local('MountainsofChristmas-Regular'), url('http://themes.googleusercontent.com/font?kit=dVGBFPwd6G44IWDbQtPew5nAfKFSawIYY7QhhHDqGJ3r7w4p9aSvGirXi6XmeXNA') format('woff');
+}
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Muli'), url('http://themes.googleusercontent.com/font?kit=ssLxykPZxdJ1nn7-QxMS_vesZW2xOQ-xsNqO47m55DA') format('woff');
 }
 @font-face {
   font-family: 'Neucha';
@@ -621,6 +639,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Play'), url('http://themes.googleusercontent.com/font?kit=O42nOVBbQePwEq3_DiTzmfesZW2xOQ-xsNqO47m55DA') format('woff');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Playfair Display'), local('PlayfairDisplay'), url('http://themes.googleusercontent.com/font?kit=2NBgzUtEeyB-Xtpr9bm1CQ34q8rAR5ss8ZHIGbrJOyY') format('woff');
 }
 @font-face {
   font-family: 'Podkova';
@@ -759,6 +783,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Tangerine'), url('http://themes.googleusercontent.com/font?kit=N3tHuUrQVE3FJr1SnuxxwrO3LdcAZYWl9Si6vvxL-qU') format('woff');
+}
+@font-face {
+  font-family: 'Tenor Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Tenor Sans'), local('TenorSans'), url('http://themes.googleusercontent.com/font?kit=9HFrOWn7c935gS-o3LJU-b3hpw3pgy2gAi-Ip7WPMi0') format('woff');
 }
 @font-face {
   font-family: 'Terminal Dosis Light';
