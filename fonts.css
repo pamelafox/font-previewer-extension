@@ -95,6 +95,12 @@
   src: local('Bigshot One'), local('BigshotOne'), url('http://themes.googleusercontent.com/font?kit=bWykSiy19zUrP0LR0jRzqpXfdieUyyORoM9wGrfggHw') format('woff');
 }
 @font-face {
+  font-family: 'Brawler';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Brawler'), url('http://themes.googleusercontent.com/font?kit=FJh-ou7cQTONwf7s_nf2xQLUuEpTyoUstqEm5AMlJo4') format('woff');
+}
+@font-face {
   font-family: 'Buda';
   font-style: normal;
   font-weight: 300;
@@ -141,6 +147,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('CarterOne'), url('http://themes.googleusercontent.com/font?kit=JVmz2IJx4pokjeiHbgrKP73hpw3pgy2gAi-Ip7WPMi0') format('woff');
+}
+@font-face {
+  font-family: 'Caudex';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Caudex'), url('http://themes.googleusercontent.com/font?kit=xQy40jR3Tdm2fdXkgBO1IuvvDin1pK8aKteLpeZ5c0A') format('woff');
 }
 @font-face {
   font-family: 'Cherry Cream Soda';
@@ -224,7 +236,7 @@
   font-family: 'Dancing Script';
   font-style: normal;
   font-weight: normal;
-  src: local('Dancing Script'), local('DancingScript'), url('http://themes.googleusercontent.com/static/fonts/dancingscript/v0/DK0eTGXiZjN6yA8zAEyM2T3YhDbrqBPJmia6ohwevn0.woff') format('woff');
+  src: local('Dancing Script'), local('DancingScript'), url('http://themes.googleusercontent.com/font?kit=DK0eTGXiZjN6yA8zAEyM2T3YhDbrqBPJmia6ohwevn0') format('woff');
 }
 @font-face {
   font-family: 'Dawning of a New Day';
@@ -351,6 +363,12 @@
   font-style: normal;
   font-weight: 400;
   src: local('Judson Regular'), local('Judson-Regular'), url('http://themes.googleusercontent.com/font?kit=DhzivixfllHcseu5NdB7-uvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'Jura';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Jura Regular'), local('Jura-Regular'), url('http://themes.googleusercontent.com/font?kit=towHzux42mZKKxG5wyG3vPesZW2xOQ-xsNqO47m55DA') format('woff');
 }
 @font-face {
   font-family: 'Just Another Hand';
@@ -521,6 +539,12 @@
   src: local('NovaCut'), url('http://themes.googleusercontent.com/font?kit=JXoEY-idi4hXoQnt-dYHo3YhjbSpvc47ee6xR_80Hnw') format('woff');
 }
 @font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito'), url('http://themes.googleusercontent.com/font?kit=zH9SxMPsG8rPw1KZfMF6OOvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
   font-family: 'OFL Sorts Mill Goudy TT';
   font-style: normal;
   font-weight: normal;
@@ -599,6 +623,12 @@
   src: local('Play'), url('http://themes.googleusercontent.com/font?kit=O42nOVBbQePwEq3_DiTzmfesZW2xOQ-xsNqO47m55DA') format('woff');
 }
 @font-face {
+  font-family: 'Podkova';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Podkova'), url('http://themes.googleusercontent.com/font?kit=5dVyKyV5GT74NvaRoai0eALUuEpTyoUstqEm5AMlJo4') format('woff');
+}
+@font-face {
   font-family: 'Puritan';
   font-style: normal;
   font-weight: normal;
@@ -645,6 +675,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Rokkitt'), url('http://themes.googleusercontent.com/font?kit=j7yPV9pquEdcelvB1Nl2EgLUuEpTyoUstqEm5AMlJo4') format('woff');
+}
+@font-face {
+  font-family: 'Ruslan Display';
+  font-style: normal;
+  font-weight: normal;
+  src: local('RuslanDisplay'), url('http://themes.googleusercontent.com/font?kit=SREdhlyLNUfU1VssRBfs3l5WD_6KDubSZ57CgJeIqAs') format('woff');
 }
 @font-face {
   font-family: 'Schoolbell';
@@ -752,7 +788,7 @@
   font-family: 'Ultra';
   font-style: normal;
   font-weight: normal;
-  src: local('Ultra'), url('http://themes.googleusercontent.com/font?kit=N37YjEVftlzgIT2wpUpP-aCWcynf_cDxXwCLxiixG1c') format('woff');
+  src: local('Ultra'), url('http://themes.googleusercontent.com/static/fonts/ultra/v1/N37YjEVftlzgIT2wpUpP-aCWcynf_cDxXwCLxiixG1c.woff') format('woff');
 }
 @font-face {
   font-family: 'UnifrakturCook';
@@ -807,6 +843,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Walter Turncoat'), local('WalterTurncoat'), url('http://themes.googleusercontent.com/font?kit=sG9su5g4GXy1KP73cU3hvcEAYTnDqB-2zzG2h4iC9bE') format('woff');
+}
+@font-face {
+  font-family: 'Wire One';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Wire One'), local('WireOne'), url('http://themes.googleusercontent.com/font?kit=bfQme3tB5lroBTj0ihRpxnYhjbSpvc47ee6xR_80Hnw') format('woff');
 }
 @font-face {
   font-family: 'Yanone Kaffeesatz';
