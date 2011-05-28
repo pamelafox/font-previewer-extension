@@ -10,6 +10,12 @@ The manual update process is:
 - Replace '::Menu' in fonts.css with ''
 - Copy JSON from http://code.google.com/webfonts/preview, save to fonts.js
 
+The "testing" process is:
+- Open a webpage, try to apply a font, try to change the style, try to apply
+a different font, try to reset, try to apply another.
+- Good webpages are: http://en.wikipedia.org/wiki/Fox (Basics)
+                     http://www.mysparebrain.com/svgjs (Tests SVG issue)
+
 Here are some features that I would like to add in the future:
 - Automate the update process somehow
 - Filter font list by serif/sans serif/etc, like on Web Fonts directory
