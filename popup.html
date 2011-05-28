@@ -94,7 +94,6 @@ var localStarage = function() {
 
   var checkEmpty = function(starredList) {
     if (starredList.querySelectorAll('.' + STARREDCLASS).length == 0) {
-      console.log('setting inner html');
       starredList.innerHTML = EMPTYHTML;
     }
   }
@@ -262,7 +261,7 @@ function resetFont() {
     function resetElem(elem) {
       for (var fontOptionId in fontOptionIds) {
         if (elem.hasAttribute('data-' + fontOptionId)) {
-          if (elem.getAttribute('data-' + fontOptionId) != 'undefined') {
+          if (elem.getAttribute('data-' + fontOptionId) != '') {
             elem.style[fontOptionId] = elem.getAttribute('data-' + fontOptionId);
           } else {
             elem.style[fontOptionId] = null;
@@ -271,7 +270,7 @@ function resetFont() {
       }
     }
     resetElem(document.body);
-    var elems = document.getElementsByClassName('fontchangermodified');
+    var elems = document.getElementsByTagName('*');
     for (var i = 0; i < elems.length; i++) {
       resetElem(elems[i]);
     }
@@ -322,10 +321,7 @@ function changeFont() {
     function processElem(elem) {
       for (var fontOptionId in fontOptionIds) {
         if (fontOptions[fontOptionId]) {
-          if (elem.className.indexOf('fontchangermodified') == -1) {
-            elem.className += ' fontchangermodified';
-          }
-          if (elem.getAttribute('data-' + fontOptionId) === undefined) {
+          if (elem.getAttribute('data-' + fontOptionId) === null) {
             elem.setAttribute('data-' + fontOptionId, elem.style[fontOptionId]);
           }
           elem.style[fontOptionId] = fontOptions[fontOptionId];
