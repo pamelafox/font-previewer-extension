@@ -5,12 +5,11 @@
   <script src="fonts.js"></script>
   <style>
 body {
-  background-color: #eee;
   width: 380px;
-  height: 350px;
+  height: 370px;
   overflow: hidden;
   margin: 0px;
-  padding: 0px;
+  padding: 3px;
   font-family: Arial, sans-serif;
   font-size: 11px;
 }
@@ -24,14 +23,38 @@ label {
   margin-top: 10px;
 }
 
+#step1 {
+  width: 100%;
+  border-bottom: 2px solid black;
+  margin-bottom: 7px;
+}
+
+#step2 {
+  width: 100%;
+}
+
+#step3 {
+  clear:both;
+  width: 100%;
+  border-top: 2px solid black;
+  margin-bottom: 7px;
+}
+
+#step4 {
+  text-align: center;
+  border-top: 1px dotted black;
+  padding-top: 5px;
+  width: 100%;
+}
+
 #fonts {
-  float: left;
-  text-align: left;
-  margin-top: 1px;
-  margin-right: 10px;
+  float: right;
+  width: 58%;
   height: 100%;
   overflow: auto;
-  border-right: 1px solid black;
+  text-align: left;
+  padding-left: 5px;
+  border-left: 1px solid #ccc;
 }
 
 #fonts:first-child {
@@ -286,12 +309,13 @@ function resetFont() {
  */
 function changeFont() {
 
+  var selector = document.getElementById('selector').value;
   var fontFamily = fontOptions.fontFamily || fonts[0];
   var fontUrl = fonts[fontFamily].url;
 
   // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
-  fontHtml += '<style>\nbody {\n font-family: \'' + fontFamily + '\', ' + fonts[fontFamily].alt + ';\n';
+  fontHtml += '<style>\n' + selector + ' {\n font-family: \'' + fontFamily + '\', ' + fonts[fontFamily].alt + ';\n';
   for (var fontOptionId in fontOptionIds) {
     if (fontOptions[fontOptionId]) {
       if (fontOptionId != 'fontFamily') {
@@ -310,7 +334,7 @@ function changeFont() {
    * @param {String} fontFamily
    * @param {String} fontUrl
    */
-  function PREVIEWER_changeFont(fontOptionIds, fontOptions, fontFamily, fontUrl) {
+  function PREVIEWER_changeFont(selector, fontOptionIds, fontOptions, fontFamily, fontUrl) {
 
     /**
      * Processes given DOM element. For every styling option specified, it stores
@@ -331,9 +355,12 @@ function changeFont() {
 
     // Adds the font stylesheet to the page.
     document.body.innerHTML += '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">';
+
     // Processes BODY tag and all children.
-    processElem(document.body);
-    var elems = document.body.getElementsByTagName('*');
+    if (selector == '*') {
+      processElem(document.body);
+    }
+    var elems = document.body.querySelectorAll(selector);
     for (var i = 0; i < elems.length; i++) {
       processElem(elems[i]);
     }
@@ -341,7 +368,7 @@ function changeFont() {
 
   // Serializes function and sends to target page.
   var code = PREVIEWER_changeFont.toString() +
-    ' PREVIEWER_changeFont(' + stringifyArgs(fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
+    ' PREVIEWER_changeFont(' + stringifyArgs(selector, fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
   chrome.tabs.executeScript(null, {code: code});
 }
 
@@ -369,7 +396,20 @@ function stringifyArgs() {
  </head>
  <body onload="onLoad()">
   <div style="clear:both">
+    <div id="step1">
+      <p>
+      <b>1.</b> Specify a CSS selector: <input id="selector" type="text" value="*" onkeyup="document.forms[0].reset()">
+      <br><em>Defaults to "*", which will apply the changes to everything.</em>
+      </p>
+    </div>
+
    <form>
+    <div id="step2">
+      <p>
+      <b>2.</b> Try different font families and text styling options.
+      </p>
+    </div>
+
     <div id="fonts">
      <label>Filter:</label>
      <select id="fonts-subset" onchange="onSubsetChange(this)">
@@ -433,23 +473,21 @@ function stringifyArgs() {
        <option>overline</option>
       </select></label>
      </p>
-     <br>
-     <!--<label style="border-top:1px solid black; padding-top: 10px">Apply to all DOM nodes?
-     <input type="checkbox" id="applyAll" onchange="onOptionChange(this)" checked>
-     </label>
-     <p><em>This can slow down preview on somepages. Diabling will apply styles only to the body tag.</em></p>
-     -->
-     If you want to start over, <a href="javascript:resetFont()">click here</a>.
     </div>
-
    </div>
 
-   <div style="clear:both; width: 100%;">
-    <textarea id="fontHtml" style="width:100%; height: 110px;">
-    After you select a font, HTML will appear here and you can paste that into your site.
+   <div id="step3">
+     <p>
+     <b>3.</b> Copy this HTML and paste into your webpage.
+     </p>
+    <textarea id="fontHtml" style="width:100%; height: 70px;">
     </textarea>
    </div>
 
+   <div id="step4">
+     To start over, either reload the page or
+     <a href="javascript:resetFont()">click here</a>.
+   </div>
   </form>
 
  </body>

@@ -20,7 +20,6 @@ Here are some features that I would like to add in the future:
 - Automate the update process somehow
 - Filter font list by serif/sans serif/etc, like on Web Fonts directory
 - Sort font list (like on Web Fonts directory)
-- Ability to specify a CSS selector to apply font changes to (using querySelectorAll)
 
 If you make improvements to this (like the suggestions above),
 please let me know.
