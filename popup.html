@@ -128,8 +128,8 @@ var localStarage = function() {
     star.innerHTML = '★';
     star.onclick = function(event) {
       event.preventDefault();
-      if (star.className.indexOf(STARREDCLASS) == -1) {
-        star.className += ' ' + STARREDCLASS;
+      if (!star.classList.contains(STARREDCLASS)) {
+        star.classList.add(STARREDCLASS);
         localStorage.setItem(lsKey, 'starred');
         if (options.starredList) {
           addClone(item, options.starredList, options.onClone);
@@ -146,7 +146,7 @@ var localStarage = function() {
     item.insertBefore(star, item.firstChild);
 
     if (localStorage.getItem(lsKey)) {
-      star.className += ' ' + STARREDCLASS;
+      star.classList.add(STARREDCLASS);
       if (options.starredList) {
         addClone(item, options.starredList, options.onClone);
       }
@@ -259,7 +259,7 @@ function onSubsetChange() {
   var value = document.getElementById('fonts-subset').value;
   var matches = document.querySelectorAll('div.fontrow');
   for (var i = 0; i < matches.length; i++) {
-    if (matches[i].className.indexOf(value) > -1) {
+    if (matches[i].classList.contains(value)) {
       matches[i].style.display = 'block';
     } else {
       matches[i].style.display = 'none';

@@ -59,6 +59,12 @@
   src: local('Arimo'), url('http://themes.googleusercontent.com/font?kit=pI31XjBdq57DA1BhHfKwHaCWcynf_cDxXwCLxiixG1c') format('woff');
 }
 @font-face {
+  font-family: 'Artifika';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Artifika Medium'), local('Artifika-Medium'), url('http://themes.googleusercontent.com/font?kit=U5NexbIxUtQa3G9tf4eACHYhjbSpvc47ee6xR_80Hnw') format('woff');
+}
+@font-face {
   font-family: 'Arvo';
   font-style: normal;
   font-weight: normal;
@@ -435,6 +441,12 @@
   font-style: normal;
   font-weight: normal;
   src: local('Lobster'), url('http://themes.googleusercontent.com/font?kit=FuUi-VOTORb0zttY5_e9NwLUuEpTyoUstqEm5AMlJo4') format('woff');
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Lora'), url('http://themes.googleusercontent.com/font?kit=pr6qctiPc32nsGRCurRfIPesZW2xOQ-xsNqO47m55DA') format('woff');
 }
 @font-face {
   font-family: 'Luckiest Guy';
