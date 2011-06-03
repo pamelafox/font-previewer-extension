@@ -283,12 +283,10 @@ function resetFont() {
 
     function resetElem(elem) {
       for (var fontOptionId in fontOptionIds) {
-        if (elem.hasAttribute('data-' + fontOptionId)) {
-          if (elem.getAttribute('data-' + fontOptionId) != '') {
-            elem.style[fontOptionId] = elem.getAttribute('data-' + fontOptionId);
-          } else {
-            elem.style[fontOptionId] = null;
-          }
+        if (elem.dataset[fontOptionId] != '') {
+          elem.style[fontOptionId] = elem.dataset[fontOptionId];
+        } else {
+         elem.style[fontOptionId] = null;
         }
       }
     }
@@ -345,8 +343,8 @@ function changeFont() {
     function processElem(elem) {
       for (var fontOptionId in fontOptionIds) {
         if (fontOptions[fontOptionId]) {
-          if (elem.getAttribute('data-' + fontOptionId) === null) {
-            elem.setAttribute('data-' + fontOptionId, elem.style[fontOptionId]);
+          if (elem.dataset[fontOptionId] === null) {
+            elem.dataset[fontOptionId] = elem.style[fontOptionId];
           }
           elem.style[fontOptionId] = fontOptions[fontOptionId];
         }
