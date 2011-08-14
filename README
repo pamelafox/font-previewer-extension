@@ -1,14 +1,8 @@
 This is the code for a Chrome extension that helps you preview
 how fonts from the Google Fonts API look on existing webpages.
 
-There is currently no API to query the fonts directory for metadata
-on the fonts, so this extension is manually updated based on the Google
-site every few weeks.
-
-The manual update process is:
-- Download CSS files from http://code.google.com/webfonts, save to fonts.css
-- Replace '::Menu' in fonts.css with ''
-- Copy JSON from http://code.google.com/webfonts/preview, save to fonts.js
+This extension now uses the alpha Google Web Fonts API,
+so it hopefully auto updates when there are new fonts.
 
 The "testing" process is:
 - Open a webpage, try to apply a font, try to change the style, try to apply
@@ -17,7 +11,6 @@ a different font, try to reset, try to apply another.
                      http://www.mysparebrain.com/svgjs (Tests SVG issue)
 
 Here are some features that I would like to add in the future:
-- Automate the update process somehow
 - Filter font list by serif/sans serif/etc, like on Web Fonts directory
 - Sort font list (like on Web Fonts directory)
 

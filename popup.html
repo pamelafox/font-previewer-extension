@@ -1,8 +1,6 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" type="text/css" href="fonts.css">
-  <script src="fonts.js"></script>
   <style>
 body {
   width: 380px;
@@ -170,6 +168,8 @@ var localStarage = function() {
   }
 }();
 
+var fonts = {};
+
 /**
  * Hash to store the user's currently selected font options and values.
  */
@@ -192,14 +192,55 @@ var fontOptionIds =
  'lineHeight': 'line-height'
 };
 
+var lsSubset;
 
 /**
  * Called on page load. Dynamically builds font list.
  */
 function onLoad() {
+  var script = document.createElement('script');
+  script.src = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBLBeqjz4y-yYybCig6p1PMKnt9g4PLLNU&callback=onFontsLoad';
+  document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+function onFontsLoad(json) {
   var fontsList = document.getElementById('fonts-all');
+  var allFontNames = [];
+  for (var i = 0; i < json.items.length; i++) {
+    var item = json.items[i];
+    fonts[item.family] = item;
+    allFontNames.push(item.family);
+  }
+  
+  var fontNum = 0;
+  var maxCharacters = 1730;
+  var cssBaseUrl = 'http://fonts.googleapis.com/css?family=';
+
+  function addCss() {
+    var cssUrl = cssBaseUrl;
+    while ((cssUrl.length + allFontNames[fontNum].length) < maxCharacters && (fontNum < (allFontNames.length-1))) {
+      // dont load khmer, no point
+      if (fonts[allFontNames[fontNum]].subsets[0] != 'khmer') {
+        cssUrl += escape(allFontNames[fontNum]) + '|';
+      }
+      fontNum++;
+    }
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = cssUrl;
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
+  
+  while (fontNum < (allFontNames.length-1)) {
+    addCss();
+  }
+
   for (var fontName in fonts) {
     fontsList.appendChild(makeFontRow(fontName, fonts[fontName]));
+  }
+  if (localStorage.getItem(lsSubset)) {
+    document.getElementById('fonts-subset').value = localStorage.getItem(lsSubset);
   }
   onSubsetChange();
   localStarage.init(fontsList, {
@@ -216,14 +257,16 @@ function onLoad() {
 function makeFontRow(fontName, fontInfo) {
   var div = document.createElement('div');
   div.id = fontName.replace(' ', '');
-  div.className = 'fontrow ' + fontInfo.subset;
+  div.className = 'fontrow ' + fontInfo.subsets.join(' ');
   var label = document.createElement('label');
   var input = document.createElement('input');
   input.type = 'radio';
   input.name = 'fontFamily';
   input.value = fontName;
   label.appendChild(input);
-  label.style.fontFamily = fontName;
+  if (fontInfo.subsets[0] != 'khmer') {
+    label.style.fontFamily = fontName;
+  }
   label.style.fontWeight = 'normal';
   label.appendChild(document.createTextNode(fontName));
   div.appendChild(label);
@@ -257,6 +300,7 @@ function onOptionChange(elem) {
  */
 function onSubsetChange() {
   var value = document.getElementById('fonts-subset').value;
+  localStorage.setItem(lsSubset, value);
   var matches = document.querySelectorAll('div.fontrow');
   for (var i = 0; i < matches.length; i++) {
     if (matches[i].classList.contains(value)) {
@@ -309,11 +353,15 @@ function changeFont() {
 
   var selector = document.getElementById('selector').value;
   var fontFamily = fontOptions.fontFamily || fonts[0];
-  var fontUrl = fonts[fontFamily].url;
+  var subset = document.getElementById('fonts-subset').value;
+  if (subset.indexOf('-ext') > -1) {
+    subset = subset.split('-ext')[0] + ',' + subset;
+  }
+  var fontUrl = 'http://fonts.googleapis.com/css?family=' + fontFamily + '&subset=' + subset;
 
   // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
-  fontHtml += '<style>\n' + selector + ' {\n font-family: \'' + fontFamily + '\', ' + fonts[fontFamily].alt + ';\n';
+  fontHtml += '<style>\n' + selector + ' {\n font-family: \'' + fontFamily + '\', ' + (fonts[fontFamily].alt || 'sans-serif') + ';\n';
   for (var fontOptionId in fontOptionIds) {
     if (fontOptions[fontOptionId]) {
       if (fontOptionId != 'fontFamily') {
@@ -411,9 +459,14 @@ function stringifyArgs() {
     <div id="fonts">
      <label>Filter:</label>
      <select id="fonts-subset" onchange="onSubsetChange(this)">
-       <option value="latin" selected>Latin</option>
+       <option value="cyrillic">Cyrillic</option>
+       <option value="cyrillic-ext">Cyrillic Ext</option>
        <option value="greek">Greek</option>
+       <option value="greek-ext">Greek Ext</option>
        <option value="khmer">Khmer</option>
+       <option value="latin" selected>Latin</option>
+       <option value="latin-ext">Latin Ext</option>
+       <option value="vietnamese">Vietnamese</option>
      </select>
      <div class="fonts-header">Your Favorites:</div>
      <div id="fonts-starred"></div>
