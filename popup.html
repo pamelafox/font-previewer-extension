@@ -79,368 +79,8 @@ label {
   -webkit-text-stroke-width: 1px;
 }
   </style>
-  <script>
-
-var localStarage = function() {
-  var LSPREFIX = 'localstarage-';
-  var STARCLASS = 'localstarage';
-  var STARREDCLASS = 'starred';
-  var CLONESUFFIX = '-clone';
-  var EMPTYHTML = '(None yet)';
-
-  var supportsStorage = function () {
-    try {
-      return !!localStorage.getItem;
-    } catch (e) {
-      return false;
-    }
-  }();
-
-  var addClone = function(item, starredList, onClone) {
-    if (starredList.innerHTML == EMPTYHTML) {
-      starredList.innerHTML = '';
-    }
-    var starredNode = item.cloneNode(true);
-    starredNode.id += CLONESUFFIX;
-    starredList.appendChild(starredNode);
-    // Events don't copy :(
-    starredNode.querySelectorAll('.' + STARCLASS)[0].onclick = item.querySelectorAll('.' + STARCLASS)[0].onclick;
-    onClone.call(null, starredNode);
-  }
-
-  var removeClone = function(item) {
-    var starredNode = document.getElementById(item.id + CLONESUFFIX);
-    starredNode.parentNode.removeChild(starredNode);
-  }
-
-  var checkEmpty = function(starredList) {
-    if (starredList.querySelectorAll('.' + STARREDCLASS).length == 0) {
-      starredList.innerHTML = EMPTYHTML;
-    }
-  }
-
-  var addStar = function(item, options) {
-    var lsKey = LSPREFIX + item.id;
-    var star = document.createElement('span');
-    star.className = STARCLASS;
-    star.innerHTML = '★';
-    star.onclick = function(event) {
-      event.preventDefault();
-      if (!star.classList.contains(STARREDCLASS)) {
-        star.classList.add(STARREDCLASS);
-        localStorage.setItem(lsKey, 'starred');
-        if (options.starredList) {
-          addClone(item, options.starredList, options.onClone);
-        }
-      } else {
-        star.className = STARCLASS;
-        localStorage.removeItem(lsKey);
-        if (options.starredList) {
-          removeClone(item);
-          checkEmpty(options.starredList);
-        }
-      }
-    };
-    item.insertBefore(star, item.firstChild);
-
-    if (localStorage.getItem(lsKey)) {
-      star.classList.add(STARREDCLASS);
-      if (options.starredList) {
-        addClone(item, options.starredList, options.onClone);
-      }
-    }
-  }
-
-  return {
-
-    init: function(list, options) {
-      if (!supportsStorage) return false;
-      var items = list.childNodes;
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].nodeType == 1) {
-          addStar(items[i], options);
-        }
-      }
-      if (options.starredList) {
-        checkEmpty(options.starredList);
-      }
-    }
-  }
-}();
-
-var fonts = {};
-
-/**
- * Hash to store the user's currently selected font options and values.
- */
-var fontOptions = {};
-
-/**
- * Hash that maps font option IDs to CSS equivalents.
- * TODO: Remember why the mapping is necessary. (I forgot).
- */
-var fontOptionIds =
-{'fontFamily': 'font-family',
- 'fontSize': 'font-size',
- 'fontStyle': 'font-style',
- 'fontWeight': 'font-weight',
- 'textShadow': 'text-shadow',
- 'textDecoration': 'text-decoration',
- 'textTransform': 'text-transform',
- 'letterSpacing': 'letter-spacing',
- 'wordSpacing': 'word-spacing',
- 'lineHeight': 'line-height'
-};
-
-var lsSubset;
-
-/**
- * Called on page load. Dynamically builds font list.
- */
-function onLoad() {
-  var script = document.createElement('script');
-  script.src = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBLBeqjz4y-yYybCig6p1PMKnt9g4PLLNU&callback=onFontsLoad';
-  document.getElementsByTagName('head')[0].appendChild(script);
-}
-
-function onFontsLoad(json) {
-  var fontsList = document.getElementById('fonts-all');
-  var allFontNames = [];
-  for (var i = 0; i < json.items.length; i++) {
-    var item = json.items[i];
-    fonts[item.family] = item;
-    allFontNames.push(item.family);
-  }
-  
-  var fontNum = 0;
-  var maxCharacters = 1730;
-  var cssBaseUrl = 'http://fonts.googleapis.com/css?family=';
-
-  function addCss() {
-    var cssUrl = cssBaseUrl;
-    while ((cssUrl.length + allFontNames[fontNum].length) < maxCharacters && (fontNum < (allFontNames.length-1))) {
-      // dont load khmer, no point
-      if (fonts[allFontNames[fontNum]].subsets[0] != 'khmer') {
-        cssUrl += escape(allFontNames[fontNum]) + '|';
-      }
-      fontNum++;
-    }
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = cssUrl;
-    document.getElementsByTagName('head')[0].appendChild(link);
-  }
-  
-  while (fontNum < (allFontNames.length-1)) {
-    addCss();
-  }
-
-  for (var fontName in fonts) {
-    fontsList.appendChild(makeFontRow(fontName, fonts[fontName]));
-  }
-  if (localStorage.getItem(lsSubset)) {
-    document.getElementById('fonts-subset').value = localStorage.getItem(lsSubset);
-  }
-  onSubsetChange();
-  localStarage.init(fontsList, {
-     starredList: document.getElementById('fonts-starred'),
-     onClone: addRowBehavior
-  });
-}
-
-/**
- * Adds specified font to font list.
- * @param {String} fontName
- * @param {Object} fontInfo
- */
-function makeFontRow(fontName, fontInfo) {
-  var div = document.createElement('div');
-  div.id = fontName.replace(' ', '');
-  div.className = 'fontrow ' + fontInfo.subsets.join(' ');
-  var label = document.createElement('label');
-  var input = document.createElement('input');
-  input.type = 'radio';
-  input.name = 'fontFamily';
-  input.value = fontName;
-  label.appendChild(input);
-  if (fontInfo.subsets[0] != 'khmer') {
-    label.style.fontFamily = fontName;
-  }
-  label.style.fontWeight = 'normal';
-  label.appendChild(document.createTextNode(fontName));
-  div.appendChild(label);
-  addRowBehavior(div);
-  return div;
-}
-
-
-function addRowBehavior(div) {
-  var input = div.getElementsByTagName('input')[0];
-  input.onchange = function () {
-    fontOptions.fontFamily = input.value;
-    changeFont();
-  };
-}
-
-/**
- * Called when the user changes any of the font styling options.
- * @param {Element} elem
- */
-function onOptionChange(elem) {
-  var id = elem.id;
-  var value = elem.value;
-  fontOptions[id] = value;
-  changeFont();
-}
-
-/**
- * Called when the user changes the font subset dropdown.
- * Also called on initial load.
- */
-function onSubsetChange() {
-  var value = document.getElementById('fonts-subset').value;
-  localStorage.setItem(lsSubset, value);
-  var matches = document.querySelectorAll('div.fontrow');
-  for (var i = 0; i < matches.length; i++) {
-    if (matches[i].classList.contains(value)) {
-      matches[i].style.display = 'block';
-    } else {
-      matches[i].style.display = 'none';
-    }
-  }
-}
-
-/**
- * Resets the font on the target page by setting styles back
- * to original styles (stored in data attributes).
- */
-function resetFont() {
-  // Resets the form
-  document.forms[0].reset();
-
-  /**
-   * Resets the font and styles on target page to their original state, stored in data attributes.
-   * @param {Object} fontOptionIds
-   */
-  function PREVIEWER_resetFont(fontOptionIds) {
-
-    function resetElem(elem) {
-      for (var fontOptionId in fontOptionIds) {
-        if (elem.dataset[fontOptionId] != '') {
-          elem.style[fontOptionId] = elem.dataset[fontOptionId];
-        } else {
-         elem.style[fontOptionId] = null;
-        }
-      }
-    }
-    resetElem(document.body);
-    var elems = document.getElementsByTagName('*');
-    for (var i = 0; i < elems.length; i++) {
-      resetElem(elems[i]);
-    }
-  }
-
-  // Serializes the function and sends to target page. 
-  var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
-  chrome.tabs.executeScript(null, {code: code});
-}
-
-/**
- * Called when the user selects a new font to preview.
- */
-function changeFont() {
-
-  var selector = document.getElementById('selector').value;
-  var fontFamily = fontOptions.fontFamily || fonts[0];
-  var subset = document.getElementById('fonts-subset').value;
-  if (subset.indexOf('-ext') > -1) {
-    subset = subset.split('-ext')[0] + ',' + subset;
-  }
-  var fontUrl = 'http://fonts.googleapis.com/css?family=' + fontFamily + '&subset=' + subset;
-
-  // Constructs the HTML that the user can copy/paste into their site.
-  var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
-  fontHtml += '<style>\n' + selector + ' {\n font-family: \'' + fontFamily + '\', ' + (fonts[fontFamily].alt || 'sans-serif') + ';\n';
-  for (var fontOptionId in fontOptionIds) {
-    if (fontOptions[fontOptionId]) {
-      if (fontOptionId != 'fontFamily') {
-        fontHtml += '  ' + fontOptionIds[fontOptionId] + ': ' + fontOptions[fontOptionId] + ';\n';
-      }
-    }
-  }
-  fontHtml += '}\n</style>';
-  document.getElementById('fontHtml').innerHTML = fontHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-  /**
-   * Changes the font and styles on the target page per user selected options.
-   * Sends all the globals from this page, since they are not available on the target page.
-   * @param {Object} fontOptionIds
-   * @param {Object} fontOptions
-   * @param {String} fontFamily
-   * @param {String} fontUrl
-   */
-  function PREVIEWER_changeFont(selector, fontOptionIds, fontOptions, fontFamily, fontUrl) {
-
-    /**
-     * Processes given DOM element. For every styling option specified, it stores
-     * the old style as a data attribute and sets the new style.
-     * It also sets a classname on the element to indicate its been processed.
-     * @param {Element} elem
-     */
-    function processElem(elem) {
-      for (var fontOptionId in fontOptionIds) {
-        if (fontOptions[fontOptionId]) {
-          if (elem.dataset[fontOptionId] === null) {
-            elem.dataset[fontOptionId] = elem.style[fontOptionId];
-          }
-          elem.style[fontOptionId] = fontOptions[fontOptionId];
-        }
-      }
-    }
-
-    // Adds the font stylesheet to the page.
-    document.body.innerHTML += '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">';
-
-    // Processes BODY tag and all children.
-    if (selector == '*') {
-      processElem(document.body);
-    }
-    var elems = document.body.querySelectorAll(selector);
-    for (var i = 0; i < elems.length; i++) {
-      processElem(elems[i]);
-    }
-  }
-
-  // Serializes function and sends to target page.
-  var code = PREVIEWER_changeFont.toString() +
-    ' PREVIEWER_changeFont(' + stringifyArgs(selector, fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
-  chrome.tabs.executeScript(null, {code: code});
-}
-
-/**
- * Converts all passed arguments to a string.
- * Makes it easier to send function call to executeScript()
- * return {String}
- */
-function stringifyArgs() {
-  var stringifiedArgs = [];
-  for (var i = 0; i < arguments.length; i++) {
-    var argument = arguments[i];
-    if (typeof argument == 'string') {
-      stringifiedArgs.push('\'' + argument + '\'');
-    } else if (typeof argument == 'number' || typeof argument == 'boolean') {
-      stringifiedArgs.push(argument);
-    } else if (typeof argument == 'object') {
-      stringifiedArgs.push(JSON.stringify(argument));
-    }
-  }
-  return stringifiedArgs.join(',');
-}
-
-  </script>
  </head>
- <body onload="onLoad()">
+ <body>
   <div style="clear:both">
     <div id="step1">
       <p>
@@ -458,7 +98,7 @@ function stringifyArgs() {
 
     <div id="fonts">
      <label>Filter:</label>
-     <select id="fonts-subset" onchange="onSubsetChange(this)">
+     <select id="fonts-subset">
        <option value="cyrillic">Cyrillic</option>
        <option value="cyrillic-ext">Cyrillic Ext</option>
        <option value="greek">Greek</option>
@@ -480,7 +120,7 @@ function stringifyArgs() {
 
     <div>
      <p><label>Size:<br>
-      <select id="fontSize" onchange="onOptionChange(this)">
+      <select id="fontSize">
        <option>50%</option>
        <option selected>100%</option>
        <option>150%</option>
@@ -488,19 +128,19 @@ function stringifyArgs() {
       </select></label>
      </p>
      <p><label>Style: <br>
-      <select id="fontStyle" onchange="onOptionChange(this)">
+      <select id="fontStyle">
        <option selected>regular</option>
        <option>italic</option>
       </select></label>
      </p>
      <p><label>Weight: <br>
-      <select id="fontWeight" onchange="onOptionChange(this)">
+      <select id="fontWeight">
        <option selected>regular</option>
        <option>bold</option>
       </select></label>
      </p>
      <p><label>Shadow:<br>
-      <select id="textShadow" onchange="onOptionChange(this)">
+      <select id="textShadow">
        <option selected>none</option>
        <option>2px 2px 2px #aaa</option>
        <option>4px 4px 4px #bbb</option>
@@ -509,7 +149,7 @@ function stringifyArgs() {
       </select></label>
      </p>
      <p><label>Transform:<br>
-      <select id="textTransform" onchange="onOptionChange(this)">
+      <select id="textTransform">
        <option selected>none</option>
        <option>capitalize</option>
        <option>uppercase</option>
@@ -517,7 +157,7 @@ function stringifyArgs() {
       </select></label>
      </p>
      <p><label>Decoration:<br>
-      <select id="textDecoration" onchange="onOptionChange(this)">
+      <select id="textDecoration">
        <option selected>none</option>
        <option>underline</option>
        <option>line-through</option>
@@ -540,6 +180,9 @@ function stringifyArgs() {
      <a href="javascript:resetFont()">click here</a>.
    </div>
   </form>
-
+  <script src="jquery.js"></script>
+  <script src="lscache.js"></script>
+  <script src="localstarage.js"></script>
+  <script src="popup.js"></script>
  </body>
 </html>
