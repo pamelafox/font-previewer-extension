@@ -165,7 +165,7 @@ function loadVisibleFonts() {
   }
 
   var maxCharacters = 1730;
-  var cssBaseUrl = '//fonts.googleapis.com/css?family=';
+  var cssBaseUrl = 'https://fonts.googleapis.com/css?family=';
 
   var visibleFontNames = [];
   for (var i = 0; i < allFontNames.length; i++) {
