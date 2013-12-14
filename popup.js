@@ -165,7 +165,7 @@ function loadVisibleFonts() {
   }
 
   var maxCharacters = 1730;
-  var cssBaseUrl = 'http://fonts.googleapis.com/css?family=';
+  var cssBaseUrl = '//fonts.googleapis.com/css?family=';
 
   var visibleFontNames = [];
   for (var i = 0; i < allFontNames.length; i++) {
@@ -262,7 +262,7 @@ function changeFont() {
   if (subset.indexOf('-ext') > -1) {
     subset = subset.split('-ext')[0] + ',' + subset;
   }
-  var fontUrl = 'http://fonts.googleapis.com/css?family=' + fontFamily + '&subset=' + subset;
+  var fontUrl = '//fonts.googleapis.com/css?family=' + fontFamily + '&subset=' + subset;
 
   // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
