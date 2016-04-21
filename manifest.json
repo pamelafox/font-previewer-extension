@@ -8,7 +8,10 @@
   ],
   "browser_action": {
       "default_title": "Changes the page font to desired Google Font API face.",
-      "default_icon": "font_api.gif",
+      "default_icon": {
+        "19": "icon_toolbar.png",
+        "38": "icon_toolbar@2x.png"
+      },
       "default_popup": "popup.html"
   },
   "content_security_policy": "script-src 'self' https://www.googleapis.com/; object-src 'self'",
