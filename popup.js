@@ -75,6 +75,24 @@ function onFontsLoad(json, fromCache) {
   $('#fonts').on('scroll', throttle(function (event) {
     loadVisibleFonts();
   }, 1000));
+
+  document.getElementById("fonts-search").addEventListener("keyup", onSearchChange);
+}
+
+/**
+ * Apply search to the font list
+ */
+function onSearchChange() {
+  var fontRows = document.getElementsByClassName('fontrow');
+  for(var i = 0; i < fontRows.length; i++) {
+    var fontName = fontRows[i].getAttribute('data-font');
+    if (fontName.toLowerCase().indexOf(this.value.toLowerCase()) == -1) {
+      fontRows[i].style.display = "none";
+    }
+    else {
+      fontRows[i].style.display = "block";
+    }
+  }
 }
 
 /**
@@ -246,7 +264,7 @@ function resetFont() {
     }
   }
 
-  // Serializes the function and sends to target page. 
+  // Serializes the function and sends to target page.
   var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
   chrome.tabs.executeScript(null, {code: code});
 }
