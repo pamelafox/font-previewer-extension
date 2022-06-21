@@ -55,7 +55,7 @@ label {
   border-left: 1px solid #ccc;
 }
 
-#fonts:first-child {
+#fonts>p:first-child {
   margin-top: 0px;
 }
 
@@ -97,25 +97,33 @@ label {
     </div>
 
     <div id="fonts">
-     <label>Filter:</label>
-     <select id="fonts-subset">
-       <option value="cyrillic">Cyrillic</option>
-       <option value="cyrillic-ext">Cyrillic Ext</option>
-       <option value="greek">Greek</option>
-       <option value="greek-ext">Greek Ext</option>
-       <option value="khmer">Khmer</option>
-       <option value="latin" selected>Latin</option>
-       <option value="latin-ext">Latin Ext</option>
-       <option value="vietnamese">Vietnamese</option>
-     </select>
-     <div class="fonts-header">Your Favorites:</div>
-     <div id="fonts-starred"></div>
-     <div class="fonts-header">Browse All:</div>
-     <div id="fonts-all">
-      <div id="nofont" style="display: none;">
-        <input type="radio" name="fontFamily" checked value="" style="display:none">
+      <p>
+        <label>Filter:<br>
+          <select id="fonts-subset">
+            <option value="cyrillic">Cyrillic</option>
+            <option value="cyrillic-ext">Cyrillic Ext</option>
+            <option value="greek">Greek</option>
+            <option value="greek-ext">Greek Ext</option>
+            <option value="khmer">Khmer</option>
+            <option value="latin" selected>Latin</option>
+            <option value="latin-ext">Latin Ext</option>
+            <option value="vietnamese">Vietnamese</option>
+          </select>
+        </label>
+      </p>
+      <p>
+        <label>Search:<br>
+          <input type="search" id="fonts-searchbox" name="fonts-searchbox" value="" placeholder="Open Sans, Roboto" title="One or more fonts, separated by commas">
+        </label>
+      </p>
+      <div class="fonts-header">Your Favorites:</div>
+      <div id="fonts-starred"></div>
+      <div class="fonts-header">Browse All:</div>
+      <div id="fonts-all">
+        <div id="nofont" style="display: none;">
+          <input type="radio" name="fontFamily" checked value="" style="display:none">
+        </div>
       </div>
-     </div>
     </div>
 
     <div>
