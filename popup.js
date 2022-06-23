@@ -74,8 +74,6 @@ function onFontsLoad(json, fromCache) {
 
   if (searchboxValue) {
     document.getElementById('fonts-searchbox').value = searchboxValue;
-
-    console.debug('Retrieved', LS_SEARCHBOX_VALUE, 'from local storage');
   }
 
   onSubsetChange();
@@ -271,7 +269,6 @@ function onSubsetChange() {
  * Also called on initial load.
  */
 function onSearchChange() {
-  const start = performance.now();
   const searchbox = document.getElementById('fonts-searchbox');
 
   // Sanitize and format input
@@ -290,8 +287,6 @@ function onSearchChange() {
 
   filterFonts();
   lscache.set(LS_SEARCHBOX_VALUE, value, 60*12);
-
-  console.debug(`Search took ${performance.now() - start}ms`);
 }
 
 /**
