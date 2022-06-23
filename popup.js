@@ -23,8 +23,11 @@ var fontOptionIds =
 };
 
 var lsSubset;
+var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
-var allFontNames = [];
+
+// The search terms chosen by the user
+var currentSearchTerms = [];
 
 /**
  * Called on page load. Dynamically builds font list.
@@ -37,6 +40,7 @@ function onLoad() {
   document.getElementById("textDecoration").addEventListener("change", onOptionChange);
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
   document.getElementById("fonts-subset").addEventListener("change", onOptionChange);
+  document.getElementById("fonts-searchbox").addEventListener("input", onSearchChange);
 
   var fontsJSON = lscache.get(LS_FONTS_API);
   if (fontsJSON) {
@@ -50,19 +54,28 @@ function onLoad() {
 
 function onFontsLoad(json, fromCache) {
   var fontsList = document.getElementById('fonts-all');
-  allFontNames = [];
-  for (var i = 0; i < json.items.length; i++) {
-    var item = json.items[i];
-    fonts[item.family] = item;
-    allFontNames.push(item.family);
-  }
 
-  for (var fontName in fonts) {
-    fontsList.appendChild(makeFontRow(fontName, fonts[fontName]));
+  for (fontInfo of json.items) {
+    const fontRow = makeFontRow(fontInfo);
+
+    fontsList.appendChild(fontRow);
+
+    // Save font info and associated DOM element for later use
+    // Lowercase font name is saved to speed up searches
+    fontInfo['fontRow'] = fontRow;
+    fontInfo['lowercaseFamily'] = fontInfo.family.toLowerCase();
+    fonts[fontInfo.family] = fontInfo;
   }
   if (localStorage.getItem(lsSubset)) {
     document.getElementById('fonts-subset').value = localStorage.getItem(lsSubset);
   }
+
+  const searchboxValue = lscache.get(LS_SEARCHBOX_VALUE);
+
+  if (searchboxValue) {
+    document.getElementById('fonts-searchbox').value = searchboxValue;
+  }
+
   onSubsetChange();
   localStarage.init(fontsList, {
      starredList: document.getElementById('fonts-starred'),
@@ -72,6 +85,7 @@ function onFontsLoad(json, fromCache) {
     lscache.set(LS_FONTS_API, json, 60*12);
   }
   loadVisibleFonts();
+  onSearchChange();
   $('#fonts').on('scroll', throttle(function (event) {
     loadVisibleFonts();
   }, 1000));
@@ -79,10 +93,10 @@ function onFontsLoad(json, fromCache) {
 
 /**
  * Adds specified font to font list.
- * @param {String} fontName
  * @param {Object} fontInfo
  */
-function makeFontRow(fontName, fontInfo) {
+function makeFontRow(fontInfo) {
+  const fontName = fontInfo.family;
   var div = document.createElement('div');
   div.id = fontName.replace(' ', '', 'g');
   div.setAttribute('data-font', fontName);
@@ -168,13 +182,14 @@ function loadVisibleFonts() {
   var cssBaseUrl = 'https://fonts.googleapis.com/css?family=';
 
   var visibleFontNames = [];
-  for (var i = 0; i < allFontNames.length; i++) {
-    var fontName = allFontNames[i];
-    if (!LOADED_FONTS[fontName] && fonts[fontName].subsets[0] != 'khmer') {
-      var $fontRow = $('[data-font="' + fontName + '"]');
+
+  for (font of Object.values(fonts)) {
+    if (!LOADED_FONTS[font.family] && font.subsets[0] != 'khmer') {
+      const $fontRow = $(font.fontRow);
+
       if ($fontRow.is(':visible') && inView($fontRow, 50)) {
-        visibleFontNames.push([escape(fontName)]);
-        LOADED_FONTS[fontName] = true;
+        visibleFontNames.push([escape(font.family)]);
+        LOADED_FONTS[font.family] = true;
       }
     }
   }
@@ -200,6 +215,39 @@ function onOptionChange(elem) {
 }
 
 /**
+ * Helper method to remove duplicate strings from an array (case-insensitive).
+ * @param {Array} stringArray
+ */
+ function removeDuplicates(stringArray) {
+  return [...new Set(
+    stringArray.map(str => str.toLowerCase())
+  )];
+}
+
+/**
+ * Helper method that returns true if a given font family matches any search term in a list (or the list is empty).
+ * @param {Array} searchTermArray
+ * @param {String} fontFamily
+ */
+function doesSearchTermMatch(searchTermArray, fontFamily) {
+  return searchTermArray.length === 0 || searchTermArray.some(searchTerm => fontFamily.includes(searchTerm));
+}
+
+/**
+ * Filter fonts based on search terms and hide them from the DOM accordingly.
+ */
+function filterFonts() {
+  for (font of Object.values(fonts)) {
+    // If a given font matches the search term, show it.
+    if (doesSearchTermMatch(currentSearchTerms, font.lowercaseFamily)) {
+      font.fontRow.style.display = 'block';
+    } else {
+      font.fontRow.style.display = 'none';
+    }
+  }
+}
+
+/**
  * Called when the user changes the font subset dropdown.
  * Also called on initial load.
  */
@@ -214,6 +262,31 @@ function onSubsetChange() {
       matches[i].style.display = 'none';
     }
   }
+}
+
+/**
+ * Called when the user changes text in the font search field.
+ * Also called on initial load.
+ */
+function onSearchChange() {
+  const searchbox = document.getElementById('fonts-searchbox');
+
+  // Sanitize and format input
+  const value = searchbox.value
+    .replace(/[^a-zA-Z0-9, ]/g, '')  // Remove non-alphanumeric characters
+    .replace(/ {2,}/g, ' ')  // Strip extra whitespace
+    .replace(/[, ]{2,}/g, ', ');  // Remove duplicate commas
+
+  searchbox.value = value;
+
+  // Split into individual search terms and remove duplicates
+  currentSearchTerms = removeDuplicates(value.split(/,\s?/))
+    .filter(searchTerm => {
+      return searchTerm.length > 0;
+    });
+
+  filterFonts();
+  lscache.set(LS_SEARCHBOX_VALUE, value, 60*12);
 }
 
 /**
@@ -246,7 +319,7 @@ function resetFont() {
     }
   }
 
-  // Serializes the function and sends to target page. 
+  // Serializes the function and sends to target page.
   var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
   chrome.tabs.executeScript(null, {code: code});
 }
