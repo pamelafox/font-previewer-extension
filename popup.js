@@ -22,11 +22,12 @@ var fontOptionIds =
  'lineHeight': 'line-height'
 };
 
-var lsSubset;
+var LS_SUBSET_VALUE = 'font-previewer-subset-value';
 var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
 
-// The search terms chosen by the user
+// The current subset and search terms chosen by the user
+var currentSubset = '';
 var currentSearchTerms = [];
 
 /**
@@ -39,7 +40,7 @@ function onLoad() {
   document.getElementById("textTransform").addEventListener("change", onOptionChange);
   document.getElementById("textDecoration").addEventListener("change", onOptionChange);
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
-  document.getElementById("fonts-subset").addEventListener("change", onOptionChange);
+  document.getElementById("fonts-subset").addEventListener("change", onSubsetChange);
   document.getElementById("fonts-searchbox").addEventListener("input", onSearchChange);
 
   var fontsJSON = lscache.get(LS_FONTS_API);
@@ -66,17 +67,18 @@ function onFontsLoad(json, fromCache) {
     fontInfo['lowercaseFamily'] = fontInfo.family.toLowerCase();
     fonts[fontInfo.family] = fontInfo;
   }
-  if (localStorage.getItem(lsSubset)) {
-    document.getElementById('fonts-subset').value = localStorage.getItem(lsSubset);
-  }
 
+  const subsetValue = lscache.get(LS_SUBSET_VALUE);
   const searchboxValue = lscache.get(LS_SEARCHBOX_VALUE);
+
+  if (subsetValue) {
+    document.getElementById('fonts-subset').value = subsetValue;
+  }
 
   if (searchboxValue) {
     document.getElementById('fonts-searchbox').value = searchboxValue;
   }
 
-  onSubsetChange();
   localStarage.init(fontsList, {
      starredList: document.getElementById('fonts-starred'),
      onClone: addRowBehavior
@@ -85,6 +87,7 @@ function onFontsLoad(json, fromCache) {
     lscache.set(LS_FONTS_API, json, 60*12);
   }
   loadVisibleFonts();
+  onSubsetChange();
   onSearchChange();
   $('#fonts').on('scroll', throttle(function (event) {
     loadVisibleFonts();
@@ -225,6 +228,15 @@ function onOptionChange(elem) {
 }
 
 /**
+ * Helper method that returns true if a given subset is in a list of subsets.
+ * @param {Array} subsetArray
+ * @param {String} subset
+ */
+function doesSubsetMatch(subsetArray, subset) {
+  return subsetArray.includes(subset);
+}
+
+/**
  * Helper method that returns true if a given font family matches any search term in a list (or the list is empty).
  * @param {Array} searchTermArray
  * @param {String} fontFamily
@@ -234,12 +246,12 @@ function doesSearchTermMatch(searchTermArray, fontFamily) {
 }
 
 /**
- * Filter fonts based on search terms and hide them from the DOM accordingly.
+ * Filter fonts based on subset and search terms and hide them from the DOM accordingly.
  */
 function filterFonts() {
   for (font of Object.values(fonts)) {
-    // If a given font matches the search term, show it.
-    if (doesSearchTermMatch(currentSearchTerms, font.lowercaseFamily)) {
+    // If a given font has the right subset and matches the search term, show it.
+    if (doesSubsetMatch(font.subsets, currentSubset) && doesSearchTermMatch(currentSearchTerms, font.lowercaseFamily)) {
       font.fontRow.style.display = 'block';
     } else {
       font.fontRow.style.display = 'none';
@@ -252,16 +264,10 @@ function filterFonts() {
  * Also called on initial load.
  */
 function onSubsetChange() {
-  var value = document.getElementById('fonts-subset').value;
-  localStorage.setItem(lsSubset, value);
-  var matches = document.querySelectorAll('div.fontrow');
-  for (var i = 0; i < matches.length; i++) {
-    if (matches[i].classList.contains(value)) {
-      matches[i].style.display = 'block';
-    } else {
-      matches[i].style.display = 'none';
-    }
-  }
+  currentSubset = document.getElementById('fonts-subset').value;
+
+  filterFonts();
+  lscache.set(LS_SUBSET_VALUE, currentSubset, 60*12);
 }
 
 /**
