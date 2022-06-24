@@ -22,6 +22,7 @@ var fontOptionIds =
  'lineHeight': 'line-height'
 };
 
+// Local storage keys
 var LS_SUBSET_VALUE = 'font-previewer-subset-value';
 var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
@@ -110,9 +111,7 @@ function makeFontRow(fontInfo) {
   input.name = 'fontFamily';
   input.value = fontName;
   label.appendChild(input);
-  if (fontInfo.subsets[0] != 'khmer') {
-    label.style.fontFamily = fontName;
-  }
+  label.style.fontFamily = fontName;
   label.style.fontWeight = 'normal';
   label.appendChild(document.createTextNode(fontName));
   div.appendChild(label);
@@ -187,7 +186,7 @@ function loadVisibleFonts() {
   var visibleFontNames = [];
 
   for (font of Object.values(fonts)) {
-    if (!LOADED_FONTS[font.family] && font.subsets[0] != 'khmer') {
+    if (!LOADED_FONTS[font.family]) {
       const $fontRow = $(font.fontRow);
 
       if ($fontRow.is(':visible') && inView($fontRow, 50)) {
