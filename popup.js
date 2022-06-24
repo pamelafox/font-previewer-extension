@@ -27,7 +27,7 @@ var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
 
 // The current subset and search terms chosen by the user
-var currentSubset = '';
+var currentSubset = 'latin';
 var currentSearchTerms = [];
 
 /**
@@ -228,12 +228,12 @@ function onOptionChange(elem) {
 }
 
 /**
- * Helper method that returns true if a given subset is in a list of subsets.
+ * Helper method that returns true if a given subset is in a list of subsets or the subset is `all`.
  * @param {Array} subsetArray
  * @param {String} subset
  */
 function doesSubsetMatch(subsetArray, subset) {
-  return subsetArray.includes(subset);
+  return subset === 'all' || subsetArray.includes(subset);
 }
 
 /**
