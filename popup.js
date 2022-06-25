@@ -41,8 +41,8 @@ function onLoad() {
   document.getElementById("textTransform").addEventListener("change", onOptionChange);
   document.getElementById("textDecoration").addEventListener("change", onOptionChange);
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
-  document.getElementById("fonts-subset").addEventListener("change", onSubsetChange);
-  document.getElementById("fonts-searchbox").addEventListener("input", onSearchChange);
+  document.getElementById("fonts-subset").addEventListener("change", (() => debounce(onSubsetChange))());
+  document.getElementById("fonts-searchbox").addEventListener("input", (() => debounce(onSearchChange))());
 
   var fontsJSON = lscache.get(LS_FONTS_API);
   if (fontsJSON) {
@@ -125,6 +125,21 @@ function addRowBehavior(div) {
   input.onchange = function () {
     fontOptions.fontFamily = input.value;
     changeFont();
+  };
+}
+
+// Returns a debounced version of the provided function
+// If the provided function is called multiple times within the timeout, only the last call will be executed
+// Adapted from: https://www.freecodecamp.org/news/javascript-debounce-example/
+function debounce(fn, timeout = 250) {
+  let timer;
+
+  return (...args) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, timeout);
   };
 }
 
@@ -256,6 +271,8 @@ function filterFonts() {
       font.fontRow.style.display = 'none';
     }
   }
+
+  loadVisibleFonts();
 }
 
 /**
