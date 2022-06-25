@@ -26,13 +26,16 @@ var lsSubset;
 var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
 
+const fontListEndpoint = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBLBeqjz4y-yYybCig6p1PMKnt9g4PLLNU';
+const cssEndpoint = 'https://fonts.googleapis.com/css?family=';
+
 // The search terms chosen by the user
 var currentSearchTerms = [];
 
 /**
  * Called on page load. Dynamically builds font list.
  */
-function onLoad() {
+async function onLoad() {
   document.getElementById("fontStyle").addEventListener("change", onOptionChange);
   document.getElementById("fontWeight").addEventListener("change", onOptionChange);
   document.getElementById("textShadow").addEventListener("change", onOptionChange);
@@ -43,16 +46,14 @@ function onLoad() {
   document.getElementById("fonts-searchbox").addEventListener("input", onSearchChange);
 
   var fontsJSON = lscache.get(LS_FONTS_API);
-  if (fontsJSON) {
+  if (fontsJSON && fontsJSON.hasOwnProperty('items')) {
     onFontsLoad(fontsJSON, true);
   } else {
-    var script = document.createElement('script');
-    script.src = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBLBeqjz4y-yYybCig6p1PMKnt9g4PLLNU&callback=onFontsLoad';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    onFontsLoad((await fetch(fontListEndpoint)).json());
   }
 }
 
-function onFontsLoad(json, fromCache) {
+function onFontsLoad(json, fromCache = false) {
   var fontsList = document.getElementById('fonts-all');
 
   for (fontInfo of json.items) {
@@ -178,9 +179,6 @@ function loadVisibleFonts() {
     return false;
   }
 
-  var maxCharacters = 1730;
-  var cssBaseUrl = 'https://fonts.googleapis.com/css?family=';
-
   var visibleFontNames = [];
 
   for (font of Object.values(fonts)) {
@@ -194,7 +192,7 @@ function loadVisibleFonts() {
     }
   }
   if (visibleFontNames.length > 0) {
-    var cssUrl = cssBaseUrl + visibleFontNames.join('|');
+    var cssUrl = cssEndpoint + visibleFontNames.join('|');
     var link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -350,7 +348,7 @@ async function changeFont() {
   if (subset.indexOf('-ext') > -1) {
     subset = subset.split('-ext')[0] + ',' + subset;
   }
-  var fontUrl = '//fonts.googleapis.com/css?family=' + fontFamily + '&subset=' + subset;
+  var fontUrl = cssEndpoint + fontFamily + '&subset=' + subset;
 
   // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
