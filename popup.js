@@ -290,10 +290,23 @@ function onSearchChange() {
 }
 
 /**
+ * Helper function that returns (a promise to) the current tab id
+ */
+async function getCurrentTabId() {
+  let options = {
+    active: true,
+    lastFocusedWindow: true
+  };
+
+  // Return the first result (there should only be one)
+  return (await chrome.tabs.query(options))[0].id;
+}
+
+/**
  * Resets the font on the target page by setting styles back
  * to original styles (stored in data attributes).
  */
-function resetFont() {
+async function resetFont() {
   // Resets the form
   document.forms[0].reset();
 
@@ -319,16 +332,18 @@ function resetFont() {
     }
   }
 
-  // Serializes the function and sends to target page.
-  var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
-  chrome.tabs.executeScript(null, {code: code});
+  // Execute PREVIEWER_resetFont on the target page
+  chrome.scripting.executeScript({
+    target: {tabId: await getCurrentTabId()},
+    func: PREVIEWER_resetFont,
+    args: [fontOptionIds],
+  });
 }
 
 /**
  * Called when the user selects a new font to preview.
  */
-function changeFont() {
-
+async function changeFont() {
   var selector = document.getElementById('selector').value;
   var fontFamily = fontOptions.fontFamily || fonts[0];
   var subset = document.getElementById('fonts-subset').value;
@@ -390,10 +405,12 @@ function changeFont() {
     }
   }
 
-  // Serializes function and sends to target page.
-  var code = PREVIEWER_changeFont.toString() +
-    ' PREVIEWER_changeFont(' + stringifyArgs(selector, fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
-  chrome.tabs.executeScript(null, {code: code});
+  // Execute PREVIEWER_changeFont on the target page
+  chrome.scripting.executeScript({
+    target: {tabId: await getCurrentTabId()},
+    func: PREVIEWER_changeFont,
+    args: [selector, fontOptionIds, fontOptions, fontFamily, fontUrl],
+  });
 }
 
 /**
