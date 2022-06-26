@@ -7,7 +7,7 @@
   <div id="container">
     <div id="step1">
       <p>
-      <b>1.</b> Specify a CSS selector: <input id="selector" type="text" value="*" onkeyup="document.forms[0].reset()">
+      <b>1.</b> Specify a CSS selector: <input id="selector" type="text" value="*">
       <br><em>Defaults to "*", which will apply the changes to everything.</em>
       </p>
     </div>
@@ -107,7 +107,7 @@
 
    <div id="step4">
      To start over, either reload the page or
-     <a href="javascript:resetFont()">click here</a>.
+     <a id="resetLink" href="#">click here</a>.
    </div>
   </form>
   <script src="jquery.js"></script>

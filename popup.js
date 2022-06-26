@@ -36,6 +36,7 @@ var currentSearchTerms = [];
  * Called on page load. Dynamically builds font list.
  */
 async function onLoad() {
+  document.getElementById("selector").addEventListener("input", resetForm);
   document.getElementById("fontStyle").addEventListener("change", onOptionChange);
   document.getElementById("fontWeight").addEventListener("change", onOptionChange);
   document.getElementById("textShadow").addEventListener("change", onOptionChange);
@@ -44,6 +45,7 @@ async function onLoad() {
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
   document.getElementById("fonts-subset").addEventListener("change", onOptionChange);
   document.getElementById("fonts-searchbox").addEventListener("input", onSearchChange);
+  document.getElementById("resetLink").addEventListener("click", resetFont);
 
   var fontsJSON = lscache.get(LS_FONTS_API);
   if (fontsJSON && fontsJSON.hasOwnProperty('items')) {
@@ -305,8 +307,7 @@ async function getCurrentTabId() {
  * to original styles (stored in data attributes).
  */
 async function resetFont() {
-  // Resets the form
-  document.forms[0].reset();
+  resetForm();
 
   /**
    * Resets the font and styles on target page to their original state, stored in data attributes.
@@ -336,6 +337,13 @@ async function resetFont() {
     func: PREVIEWER_resetFont,
     args: [fontOptionIds],
   });
+}
+
+/**
+ * Resets the form.
+ */
+function resetForm() {
+  document.forms[0].reset();
 }
 
 /**
