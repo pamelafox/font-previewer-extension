@@ -4,11 +4,8 @@
   "manifest_version": 3,
   "description": "Lets you choose a font from the Google Font directory with a few text styling options, and preview them on the current tab.",
   "permissions": [
+    "activeTab",
     "scripting"
-  ],
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
   ],
   "action": {
     "default_title": "Changes the page font to desired Google Font API face.",
