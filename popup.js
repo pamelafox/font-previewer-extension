@@ -87,9 +87,10 @@ function onFontsLoad(json, fromCache) {
   if (!fromCache) {
     lscache.set(LS_FONTS_API, json, 60*12);
   }
-  loadVisibleFonts();
   onSubsetChange();
   onSearchChange();
+  filterFonts();
+
   $('#fonts').on('scroll', throttle(function (event) {
     loadVisibleFonts();
   }, 1000));
@@ -128,9 +129,10 @@ function addRowBehavior(div) {
   };
 }
 
-// Returns a debounced version of the provided function
-// If the provided function is called multiple times within the timeout, only the last call will be executed
-// Adapted from: https://www.freecodecamp.org/news/javascript-debounce-example/
+/* Returns a debounced version of the provided function
+ * If the provided function is called multiple times within the timeout, only the last call will be executed
+ * Adapted from: https://www.freecodecamp.org/news/javascript-debounce-example/
+ */
 function debounce(fn, timeout = 250) {
   let timer;
 
@@ -279,18 +281,21 @@ function filterFonts() {
  * Called when the user changes the font subset dropdown.
  * Also called on initial load.
  */
-function onSubsetChange() {
+function onSubsetChange(event) {
   currentSubset = document.getElementById('fonts-subset').value;
 
-  filterFonts();
-  lscache.set(LS_SUBSET_VALUE, currentSubset, 60*12);
+  // Skip filtering if the function was called without an event
+  if (event) {
+    filterFonts();
+    lscache.set(LS_SUBSET_VALUE, currentSubset, 60*12);
+  }
 }
 
 /**
  * Called when the user changes text in the font search field.
  * Also called on initial load.
  */
-function onSearchChange() {
+function onSearchChange(event) {
   const searchbox = document.getElementById('fonts-searchbox');
 
   // Sanitize and format input
@@ -307,8 +312,11 @@ function onSearchChange() {
       return searchTerm.length > 0;
     });
 
-  filterFonts();
-  lscache.set(LS_SEARCHBOX_VALUE, value, 60*12);
+  // Skip filtering if the function was called without an event
+  if (event) {
+    filterFonts();
+    lscache.set(LS_SEARCHBOX_VALUE, value, 60*12);
+  }
 }
 
 /**
