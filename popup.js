@@ -22,11 +22,13 @@ var fontOptionIds =
  'lineHeight': 'line-height'
 };
 
-var lsSubset;
+// Local storage keys
+var LS_SUBSET_VALUE = 'font-previewer-subset-value';
 var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
 
-// The search terms chosen by the user
+// The current subset and search terms chosen by the user
+var currentSubset = 'latin';
 var currentSearchTerms = [];
 
 /**
@@ -39,8 +41,8 @@ function onLoad() {
   document.getElementById("textTransform").addEventListener("change", onOptionChange);
   document.getElementById("textDecoration").addEventListener("change", onOptionChange);
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
-  document.getElementById("fonts-subset").addEventListener("change", onOptionChange);
-  document.getElementById("fonts-searchbox").addEventListener("input", onSearchChange);
+  document.getElementById("fonts-subset").addEventListener("change", debounce(onSubsetChange));
+  document.getElementById("fonts-searchbox").addEventListener("input", debounce(onSearchChange));
 
   var fontsJSON = lscache.get(LS_FONTS_API);
   if (fontsJSON) {
@@ -66,17 +68,18 @@ function onFontsLoad(json, fromCache) {
     fontInfo['lowercaseFamily'] = fontInfo.family.toLowerCase();
     fonts[fontInfo.family] = fontInfo;
   }
-  if (localStorage.getItem(lsSubset)) {
-    document.getElementById('fonts-subset').value = localStorage.getItem(lsSubset);
-  }
 
+  const subsetValue = lscache.get(LS_SUBSET_VALUE);
   const searchboxValue = lscache.get(LS_SEARCHBOX_VALUE);
+
+  if (subsetValue) {
+    document.getElementById('fonts-subset').value = subsetValue;
+  }
 
   if (searchboxValue) {
     document.getElementById('fonts-searchbox').value = searchboxValue;
   }
 
-  onSubsetChange();
   localStarage.init(fontsList, {
      starredList: document.getElementById('fonts-starred'),
      onClone: addRowBehavior
@@ -84,8 +87,10 @@ function onFontsLoad(json, fromCache) {
   if (!fromCache) {
     lscache.set(LS_FONTS_API, json, 60*12);
   }
-  loadVisibleFonts();
+  onSubsetChange();
   onSearchChange();
+  filterFonts();
+
   $('#fonts').on('scroll', throttle(function (event) {
     loadVisibleFonts();
   }, 1000));
@@ -107,9 +112,7 @@ function makeFontRow(fontInfo) {
   input.name = 'fontFamily';
   input.value = fontName;
   label.appendChild(input);
-  if (fontInfo.subsets[0] != 'khmer') {
-    label.style.fontFamily = fontName;
-  }
+  label.style.fontFamily = fontName;
   label.style.fontWeight = 'normal';
   label.appendChild(document.createTextNode(fontName));
   div.appendChild(label);
@@ -123,6 +126,22 @@ function addRowBehavior(div) {
   input.onchange = function () {
     fontOptions.fontFamily = input.value;
     changeFont();
+  };
+}
+
+/* Returns a debounced version of the provided function
+ * If the provided function is called multiple times within the timeout, only the last call will be executed
+ * Adapted from: https://www.freecodecamp.org/news/javascript-debounce-example/
+ */
+function debounce(fn, timeout = 250) {
+  let timer;
+
+  return (...args) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, timeout);
   };
 }
 
@@ -184,7 +203,7 @@ function loadVisibleFonts() {
   var visibleFontNames = [];
 
   for (font of Object.values(fonts)) {
-    if (!LOADED_FONTS[font.family] && font.subsets[0] != 'khmer') {
+    if (!LOADED_FONTS[font.family]) {
       const $fontRow = $(font.fontRow);
 
       if ($fontRow.is(':visible') && inView($fontRow, 50)) {
@@ -225,6 +244,15 @@ function onOptionChange(elem) {
 }
 
 /**
+ * Helper method that returns true if a given subset is in a list of subsets or the subset is `all`.
+ * @param {Array} subsetArray
+ * @param {String} subset
+ */
+function doesSubsetMatch(subsetArray, subset) {
+  return subset === 'all' || subsetArray.includes(subset);
+}
+
+/**
  * Helper method that returns true if a given font family matches any search term in a list (or the list is empty).
  * @param {Array} searchTermArray
  * @param {String} fontFamily
@@ -234,33 +262,32 @@ function doesSearchTermMatch(searchTermArray, fontFamily) {
 }
 
 /**
- * Filter fonts based on search terms and hide them from the DOM accordingly.
+ * Filter fonts based on subset and search terms and hide them from the DOM accordingly.
  */
 function filterFonts() {
   for (font of Object.values(fonts)) {
-    // If a given font matches the search term, show it.
-    if (doesSearchTermMatch(currentSearchTerms, font.lowercaseFamily)) {
+    // If a given font has the right subset and matches the search term, show it.
+    if (doesSubsetMatch(font.subsets, currentSubset) && doesSearchTermMatch(currentSearchTerms, font.lowercaseFamily)) {
       font.fontRow.style.display = 'block';
     } else {
       font.fontRow.style.display = 'none';
     }
   }
+
+  loadVisibleFonts();
 }
 
 /**
  * Called when the user changes the font subset dropdown.
  * Also called on initial load.
  */
-function onSubsetChange() {
-  var value = document.getElementById('fonts-subset').value;
-  localStorage.setItem(lsSubset, value);
-  var matches = document.querySelectorAll('div.fontrow');
-  for (var i = 0; i < matches.length; i++) {
-    if (matches[i].classList.contains(value)) {
-      matches[i].style.display = 'block';
-    } else {
-      matches[i].style.display = 'none';
-    }
+function onSubsetChange(event) {
+  currentSubset = document.getElementById('fonts-subset').value;
+
+  // Skip filtering if the function was called without an event
+  if (event) {
+    filterFonts();
+    lscache.set(LS_SUBSET_VALUE, currentSubset, 60*12);
   }
 }
 
@@ -268,7 +295,7 @@ function onSubsetChange() {
  * Called when the user changes text in the font search field.
  * Also called on initial load.
  */
-function onSearchChange() {
+function onSearchChange(event) {
   const searchbox = document.getElementById('fonts-searchbox');
 
   // Sanitize and format input
@@ -285,8 +312,11 @@ function onSearchChange() {
       return searchTerm.length > 0;
     });
 
-  filterFonts();
-  lscache.set(LS_SEARCHBOX_VALUE, value, 60*12);
+  // Skip filtering if the function was called without an event
+  if (event) {
+    filterFonts();
+    lscache.set(LS_SEARCHBOX_VALUE, value, 60*12);
+  }
 }
 
 /**
