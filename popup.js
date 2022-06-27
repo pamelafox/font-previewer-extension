@@ -41,8 +41,8 @@ function onLoad() {
   document.getElementById("textTransform").addEventListener("change", onOptionChange);
   document.getElementById("textDecoration").addEventListener("change", onOptionChange);
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
-  document.getElementById("fonts-subset").addEventListener("change", (() => debounce(onSubsetChange))());
-  document.getElementById("fonts-searchbox").addEventListener("input", (() => debounce(onSearchChange))());
+  document.getElementById("fonts-subset").addEventListener("change", debounce(onSubsetChange));
+  document.getElementById("fonts-searchbox").addEventListener("input", debounce(onSearchChange));
 
   var fontsJSON = lscache.get(LS_FONTS_API);
   if (fontsJSON) {
