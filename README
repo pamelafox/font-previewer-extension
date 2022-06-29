@@ -1,18 +1,11 @@
 This is the code for a Chrome extension that helps you preview
 how fonts from the Google Fonts API look on existing webpages.
 
-This extension now uses the alpha Google Web Fonts API,
-so it hopefully auto updates when there are new fonts.
-
 The "testing" process is:
 - Open a webpage, try to apply a font, try to change the style, try to apply
 a different font, try to reset, try to apply another.
 - Good webpages are: http://en.wikipedia.org/wiki/Fox (Basics)
                      http://www.mysparebrain.com/svgjs (Tests SVG issue)
 
-Here are some features that I would like to add in the future:
-- Filter font list by serif/sans serif/etc, like on Web Fonts directory
-- Sort font list (like on Web Fonts directory)
+If you have ideas for improvements, please send a pull request.
 
-If you make improvements to this (like the suggestions above),
-please let me know.

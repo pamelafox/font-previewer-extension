@@ -226,10 +226,9 @@ function loadVisibleFonts() {
  * Called when the user changes any of the font styling options.
  * @param {Element} elem
  */
-function onOptionChange(elem) {
-  var id = elem.id;
-  var value = elem.value;
-  fontOptions[id] = value;
+function onOptionChange(event) {
+  const elem = event.target;
+  fontOptions[elem.id] = elem.value;
   changeFont();
 }
 
@@ -365,7 +364,7 @@ function changeFont() {
   if (subset.indexOf('-ext') > -1) {
     subset = subset.split('-ext')[0] + ',' + subset;
   }
-  var fontUrl = '//fonts.googleapis.com/css?family=' + fontFamily + '&subset=' + subset;
+  var fontUrl = '//fonts.googleapis.com/css?family=' + fontFamily;
 
   // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
