@@ -47,13 +47,16 @@ async function onLoad() {
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
   document.getElementById("fonts-subset").addEventListener("change", debounce(onSubsetChange));
   document.getElementById("fonts-searchbox").addEventListener("input", debounce(onSearchChange));
-  document.getElementById("resetLink").addEventListener("click", resetFont);
+  // Temporarily disable reset link as this functionality is broken
+  // document.getElementById("resetLink").addEventListener("click", resetFont);
 
   var fontsJSON = lscache.get(LS_FONTS_API);
   if (fontsJSON && fontsJSON.hasOwnProperty('items')) {
     onFontsLoad(fontsJSON, true);
   } else {
-    onFontsLoad((await fetch(fontListEndpoint)).json());
+    const response = await fetch(fontListEndpoint);
+
+    onFontsLoad(await response.json());
   }
 }
 
