@@ -27,6 +27,9 @@ var LS_SUBSET_VALUE = 'font-previewer-subset-value';
 var LS_SEARCHBOX_VALUE = 'font-previewer-searchbox-value';
 var LS_FONTS_API = 'font-previewer-api';
 
+const fontListEndpoint = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBLBeqjz4y-yYybCig6p1PMKnt9g4PLLNU';
+const cssEndpoint = 'https://fonts.googleapis.com/css?family=';
+
 // The current subset and search terms chosen by the user
 var currentSubset = 'latin';
 var currentSearchTerms = [];
@@ -34,7 +37,8 @@ var currentSearchTerms = [];
 /**
  * Called on page load. Dynamically builds font list.
  */
-function onLoad() {
+async function onLoad() {
+  document.getElementById("selector").addEventListener("input", resetForm);
   document.getElementById("fontStyle").addEventListener("change", onOptionChange);
   document.getElementById("fontWeight").addEventListener("change", onOptionChange);
   document.getElementById("textShadow").addEventListener("change", onOptionChange);
@@ -43,18 +47,20 @@ function onLoad() {
   document.getElementById("fontSize").addEventListener("change", onOptionChange);
   document.getElementById("fonts-subset").addEventListener("change", debounce(onSubsetChange));
   document.getElementById("fonts-searchbox").addEventListener("input", debounce(onSearchChange));
+  // Temporarily disable reset link as this functionality is broken
+  // document.getElementById("resetLink").addEventListener("click", resetFont);
 
   var fontsJSON = lscache.get(LS_FONTS_API);
-  if (fontsJSON) {
+  if (fontsJSON && fontsJSON.hasOwnProperty('items')) {
     onFontsLoad(fontsJSON, true);
   } else {
-    var script = document.createElement('script');
-    script.src = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBLBeqjz4y-yYybCig6p1PMKnt9g4PLLNU&callback=onFontsLoad';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    const response = await fetch(fontListEndpoint);
+
+    onFontsLoad(await response.json());
   }
 }
 
-function onFontsLoad(json, fromCache) {
+function onFontsLoad(json, fromCache = false) {
   var fontsList = document.getElementById('fonts-all');
 
   for (fontInfo of json.items) {
@@ -197,9 +203,6 @@ function loadVisibleFonts() {
     return false;
   }
 
-  var maxCharacters = 1730;
-  var cssBaseUrl = 'https://fonts.googleapis.com/css?family=';
-
   var visibleFontNames = [];
 
   for (font of Object.values(fonts)) {
@@ -213,7 +216,7 @@ function loadVisibleFonts() {
     }
   }
   if (visibleFontNames.length > 0) {
-    var cssUrl = cssBaseUrl + visibleFontNames.join('|');
+    var cssUrl = cssEndpoint + visibleFontNames.join('|');
     var link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -319,12 +322,24 @@ function onSearchChange(event) {
 }
 
 /**
+ * Helper function that returns (a promise to) the current tab id
+ */
+async function getCurrentTabId() {
+  let options = {
+    active: true,
+    lastFocusedWindow: true
+  };
+
+  // Return the first result (there should only be one)
+  return (await chrome.tabs.query(options))[0].id;
+}
+
+/**
  * Resets the font on the target page by setting styles back
  * to original styles (stored in data attributes).
  */
-function resetFont() {
-  // Resets the form
-  document.forms[0].reset();
+async function resetFont() {
+  resetForm();
 
   /**
    * Resets the font and styles on target page to their original state, stored in data attributes.
@@ -348,23 +363,32 @@ function resetFont() {
     }
   }
 
-  // Serializes the function and sends to target page.
-  var code = PREVIEWER_resetFont.toString() + ' PREVIEWER_resetFont(' + stringifyArgs(fontOptionIds) + ');';
-  chrome.tabs.executeScript(null, {code: code});
+  // Execute PREVIEWER_resetFont on the target page
+  chrome.scripting.executeScript({
+    target: {tabId: await getCurrentTabId()},
+    func: PREVIEWER_resetFont,
+    args: [fontOptionIds],
+  });
+}
+
+/**
+ * Resets the form.
+ */
+function resetForm() {
+  document.forms[0].reset();
 }
 
 /**
  * Called when the user selects a new font to preview.
  */
-function changeFont() {
-
+async function changeFont() {
   var selector = document.getElementById('selector').value;
   var fontFamily = fontOptions.fontFamily || fonts[0];
   var subset = document.getElementById('fonts-subset').value;
   if (subset.indexOf('-ext') > -1) {
     subset = subset.split('-ext')[0] + ',' + subset;
   }
-  var fontUrl = '//fonts.googleapis.com/css?family=' + fontFamily;
+  var fontUrl = cssEndpoint + fontFamily;
 
   // Constructs the HTML that the user can copy/paste into their site.
   var fontHtml = '<link href="' + fontUrl + '" rel="stylesheet" type="text/css">\n';
@@ -419,10 +443,12 @@ function changeFont() {
     }
   }
 
-  // Serializes function and sends to target page.
-  var code = PREVIEWER_changeFont.toString() +
-    ' PREVIEWER_changeFont(' + stringifyArgs(selector, fontOptionIds, fontOptions, fontFamily, fontUrl) + ');';
-  chrome.tabs.executeScript(null, {code: code});
+  // Execute PREVIEWER_changeFont on the target page
+  chrome.scripting.executeScript({
+    target: {tabId: await getCurrentTabId()},
+    func: PREVIEWER_changeFont,
+    args: [selector, fontOptionIds, fontOptions, fontFamily, fontUrl],
+  });
 }
 
 /**

@@ -1,90 +1,13 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <style>
-body {
-  width: 380px;
-  height: 370px;
-  overflow: hidden;
-  margin: 0px;
-  padding: 3px;
-  font-family: Arial, sans-serif;
-  font-size: 11px;
-}
-
-label {
-  font-weight: bold;
-}
-
-.fonts-header {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-#step1 {
-  width: 100%;
-  border-bottom: 2px solid black;
-  margin-bottom: 7px;
-}
-
-#step2 {
-  width: 100%;
-}
-
-#step3 {
-  clear:both;
-  width: 100%;
-  border-top: 2px solid black;
-  margin-bottom: 7px;
-}
-
-#step4 {
-  text-align: center;
-  border-top: 1px dotted black;
-  padding-top: 5px;
-  width: 100%;
-}
-
-#fonts {
-  float: right;
-  width: 58%;
-  height: 100%;
-  overflow: auto;
-  text-align: left;
-  padding-left: 5px;
-  border-left: 1px solid #ccc;
-}
-
-#fonts>p:first-child {
-  margin-top: 0px;
-}
-
-.localstarage {
-  cursor: pointer;
-  color: #DDD;
-  padding-right: 5px;
-}
-
-.localstarage:hover {
-  color: #FFE47A;
-}
-
-.localstarage.starred:hover {
-  color: #FFCC00;
-}
-
-.localstarage.starred {
-  color: #FFCC00;
-  -webkit-text-stroke-color: #666;
-  -webkit-text-stroke-width: 1px;
-}
-  </style>
+  <link rel="stylesheet" type="text/css" href="popup.css">
  </head>
  <body>
-  <div style="clear:both">
+  <div id="container">
     <div id="step1">
       <p>
-      <b>1.</b> Specify a CSS selector: <input id="selector" type="text" value="*" onkeyup="document.forms[0].reset()">
+      <b>1.</b> Specify a CSS selector: <input id="selector" type="text" value="*">
       <br><em>Defaults to "*", which will apply the changes to everything.</em>
       </p>
     </div>
@@ -101,7 +24,7 @@ label {
         <label>Languages:<br>
           <select id="fonts-subset">
             <option value="all">All</option>
-	    <option value="arabic">Arabic</option>
+      <option value="arabic">Arabic</option>
             <option value="bengali">Bengali</option>
             <option value="chinese-hongkong">Chinese (Hong Kong)</option>
             <option value="chinese-simplified">Chinese (Simplified)</option>
@@ -113,7 +36,7 @@ label {
             <option value="greek-ext">Greek Extended</option>
             <option value="gujarati">Gujarati</option>
             <option value="gurmukhi">Gurmukhi</option>
-	    <option value="hebrew">Hebrew</option>
+      <option value="hebrew">Hebrew</option>
             <option value="hebrew">Hebrew</option>
             <option value="japanese">Japanese</option>
             <option value="kannada">Kannada</option>
@@ -142,8 +65,8 @@ label {
       <div id="fonts-starred"></div>
       <div class="fonts-header">Browse All:</div>
       <div id="fonts-all">
-        <div id="nofont" style="display: none;">
-          <input type="radio" name="fontFamily" checked value="" style="display:none">
+        <div id="nofont">
+          <input type="radio" name="fontFamily" checked value="">
         </div>
       </div>
     </div>
@@ -201,8 +124,7 @@ label {
      <p>
      <b>3.</b> Copy this HTML and paste into your webpage.
      </p>
-    <textarea id="fontHtml" style="width:100%; height: 70px;">
-    </textarea>
+    <textarea id="fontHtml"></textarea>
    </div>
 
    <div id="step4">
